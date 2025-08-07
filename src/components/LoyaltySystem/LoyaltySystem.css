@@ -1,0 +1,242 @@
+.loyalty-system {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.loyalty-loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}
+
+.loyalty-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.loyalty-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.current-tier {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 25px;
+  border-radius: 25px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tier-icon {
+  font-size: 24px;
+}
+
+.tier-points {
+  color: #666;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tier-progress {
+  margin-bottom: 25px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-header span:first-child {
+  color: #333;
+  font-weight: 600;
+}
+
+.progress-header span:last-child {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.progress-text {
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+}
+
+.streak-info {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 25px;
+  color: white;
+}
+
+.streak-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.streak-icon {
+  font-size: 24px;
+}
+
+.streak-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.streak-count {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.streak-bonus {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.tier-benefits {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.tier-benefits h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.tier-benefits ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+.tier-benefits li {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.tier-benefits li:before {
+  content: '✓';
+  color: #4CAF50;
+  font-weight: bold;
+  position: absolute;
+  left: -18px;
+}
+
+.loyalty-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 10px;
+  color: white;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Tier-specific styles */
+.tier-badge[style*="#CD7F32"] {
+  background: linear-gradient(135deg, #CD7F32, #B8860B) !important;
+}
+
+.tier-badge[style*="#C0C0C0"] {
+  background: linear-gradient(135deg, #C0C0C0, #A9A9A9) !important;
+  color: #333 !important;
+}
+
+.tier-badge[style*="#FFD700"] {
+  background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+  color: #333 !important;
+}
+
+.tier-badge[style*="#E5E4E2"] {
+  background: linear-gradient(135deg, #E5E4E2, #D3D3D3) !important;
+  color: #333 !important;
+}
+
+.tier-badge[style*="#B9F2FF"] {
+  background: linear-gradient(135deg, #B9F2FF, #87CEEB) !important;
+  color: #333 !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .loyalty-system {
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .tier-badge {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+  
+  .tier-icon {
+    font-size: 20px;
+  }
+  
+  .loyalty-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .streak-display {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+}
