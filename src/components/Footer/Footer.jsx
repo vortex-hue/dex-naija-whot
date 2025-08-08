@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className={style.footer}>
       Built by{" "}
-      <a href="https://github.com/shalomemmy/honeycomb.git" target={"_blank"}>
+      <a href="https://github.com/vortex-hue/dex-naija-whot.git" target={"_blank"}>
         Vortex-hue
       </a>
     </footer>
