@@ -40,7 +40,6 @@ const TOURNAMENT_WALLET = new PublicKey('YOUR_REAL_TREASURY_WALLET');
 
 ## 🎯 CURRENT DEMO VALUE
 - Shows complete integration architecture
-- Demonstrates all required bounty technologies
 - Wallet connection works with real Solana wallets
 - QR codes generate real payment URLs
 - Code structure ready for mainnet deployment
