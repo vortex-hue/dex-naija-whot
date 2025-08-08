@@ -14,7 +14,7 @@ function CopyLink() {
   }, []);
 
   useEffect(() => {
-    setLink(`http://localhost:3000/play-friend/${randomCode}`);
+    setLink(`https://dex-naija-whot.vercel.app/play-friend/${randomCode}`);
   }, [randomCode]);
 
   return (
