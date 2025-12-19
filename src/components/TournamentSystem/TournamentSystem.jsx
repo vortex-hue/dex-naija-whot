@@ -22,6 +22,7 @@ const TournamentSystem = () => {
     });
     const [error, setError] = useState('');
     const [statusMessage, setStatusMessage] = useState('');
+    const [showCelebration, setShowCelebration] = useState(false);
 
     useEffect(() => {
         // Initial load
@@ -47,8 +48,10 @@ const TournamentSystem = () => {
                 if (tournament.status === 'active') {
                     setStatusMessage('Tournament started! Check the bracket.');
                 }
-                if (tournament.status === 'completed') {
+                if (tournament.status === 'completed' && activeTournament.status !== 'completed') {
                     setStatusMessage(`Tournament Over! Winner: ${tournament.winner?.name}`);
+                    setShowCelebration(true);
+                    launchConfetti();
                 }
             }
             setTournaments(prev => prev.map(t => t.id === tournament.id ? tournament : t));
@@ -143,13 +146,9 @@ const TournamentSystem = () => {
         }, 250);
     };
 
-    useEffect(() => {
-        if (activeTournament?.winner) {
-            launchConfetti();
-        }
-    }, [activeTournament?.winner]);
 
-    const ChampionModal = ({ winner }) => (
+
+    const ChampionModal = ({ winner, onClose }) => (
         <motion.div
             className="winner-modal-backdrop"
             initial={{ opacity: 0 }}
@@ -180,7 +179,7 @@ const TournamentSystem = () => {
                     </motion.div>
                     <p>Undisputed Naija Whot Master</p>
                 </div>
-                <button className="close-victory-btn" onClick={() => setActiveTournament(null)}>Back to Lobby</button>
+                <button className="close-victory-btn" onClick={onClose}>Close Celebration</button>
             </motion.div>
         </motion.div>
     );
@@ -219,8 +218,8 @@ const TournamentSystem = () => {
                 )}
 
                 {/* Winner Modal */}
-                {activeTournament?.winner && (
-                    <ChampionModal winner={activeTournament.winner} />
+                {showCelebration && activeTournament?.winner && (
+                    <ChampionModal winner={activeTournament.winner} onClose={() => setShowCelebration(false)} />
                 )}
             </AnimatePresence>
 
@@ -285,7 +284,20 @@ const TournamentSystem = () => {
 
                     {renderBracket(activeTournament)}
 
-                    {/* Old announcer removed, replaced by Modal above */}
+                    {renderBracket(activeTournament)}
+
+                    {activeTournament.status === 'completed' && activeTournament.winner && (
+                        <motion.div
+                            className="persistent-winner-card"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.5 }}
+                        >
+                            <div className="winner-badge">🏆 TOURNAMENT COMPLETED</div>
+                            <h3>Winner: <span className="highlight">{activeTournament.winner.name}</span></h3>
+                            <p>Player ID: {activeTournament.winner.storedId || 'N/A'}</p>
+                        </motion.div>
+                    )}
                 </div>
             )}
         </div>

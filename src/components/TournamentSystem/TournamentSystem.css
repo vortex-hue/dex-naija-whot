@@ -140,6 +140,47 @@
     cursor: pointer;
 }
 
+.persistent-winner-card {
+    background: linear-gradient(135deg, rgba(0, 135, 81, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+    border: 2px solid #FFD700;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+    animation: glow 3s infinite alternate;
+}
+
+.winner-badge {
+    background: #FFD700;
+    color: black;
+    font-weight: bold;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.persistent-winner-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.persistent-winner-card .highlight {
+    color: #FFD700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 10px rgba(0, 135, 81, 0.2);
+    }
+
+    to {
+        box-shadow: 0 0 20px rgba(0, 135, 81, 0.6);
+    }
+}
+
 .winner-modal-backdrop {
     position: fixed;
     top: 0;
