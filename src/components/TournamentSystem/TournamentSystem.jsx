@@ -57,10 +57,16 @@ const TournamentSystem = () => {
             setTournaments(prev => prev.map(t => t.id === tournament.id ? tournament : t));
         });
 
-        socket.on('tournament_match_ready', ({ roomId, matchId, opponent }) => {
+        socket.on('tournament_match_ready', ({ roomId, matchId, opponent, tournamentId }) => {
             setStatusMessage(`Match ready vs ${opponent}! Redirecting...`);
             setTimeout(() => {
-                navigate(`/play-friend/${roomId}`);
+                navigate(`/play-tournament/${roomId}`, {
+                    state: {
+                        isTournament: true,
+                        matchId,
+                        tournamentId
+                    }
+                });
             }, 1500);
         });
 
