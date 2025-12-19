@@ -293,8 +293,6 @@ const TournamentSystem = () => {
 
                     {renderBracket(activeTournament)}
 
-                    {renderBracket(activeTournament)}
-
                     {activeTournament.status === 'completed' && activeTournament.winner && (
                         <motion.div
                             className="persistent-winner-card"
