@@ -1,28 +1,18 @@
 .tournament-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  position: relative;
-}
-
-.tournament-page::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="a" cx="50%" cy="50%"><stop offset="0%" stop-color="white" stop-opacity="0.1"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="100" fill="url(%23a)"/><circle cx="800" cy="300" r="150" fill="url(%23a)"/><circle cx="400" cy="700" r="80" fill="url(%23a)"/><circle cx="900" cy="800" r="120" fill="url(%23a)"/></svg>');
-  opacity: 0.3;
+  /* Inherits from naija-theme-container in index.css */
 }
 
 .tournament-nav {
   position: sticky;
   top: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 77, 46, 0.95);
+  /* naija-dark with opacity */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  /* naija-gold border */
   z-index: 100;
   padding: 15px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .nav-content {
@@ -34,35 +24,55 @@
   align-items: center;
 }
 
+.nav-home-link {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--naija-white);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.nav-home-link:hover {
+  transform: scale(1.05);
+  color: var(--naija-gold);
+}
+
 .nav-content h1 {
   margin: 0;
-  font-size: 24px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.5rem;
+  color: var(--naija-gold);
   font-weight: 800;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
 .tournament-main {
   padding: 40px 0;
   position: relative;
   z-index: 1;
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 150px);
+}
+
+/* Ensure TournamentSystem looks good inside */
+.tournament-system {
+  padding: 0 20px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .nav-content {
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     text-align: center;
   }
-  
+
   .nav-content h1 {
-    font-size: 20px;
+    font-size: 1.2rem;
   }
-  
+
   .tournament-main {
     padding: 20px 0;
   }

@@ -1,15 +1,37 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;800;900&display=swap");
+
 *,
 *::after,
 *::before {
   margin: 0;
   padding: 0;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
   font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --naija-green: #008751;
+  --naija-white: #FFFFFF;
+  --naija-gold: #FFD700;
+  --naija-dark: #004d2e;
+  --naija-black: #121212;
+}
+
+.naija-theme-container {
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  background: var(--naija-green);
+  color: var(--naija-white);
+  font-family: 'Poppins', sans-serif;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 20%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 10px, transparent 10px, transparent 20px);
 }
 
 .App {
@@ -40,9 +62,11 @@ body {
     border-radius: 15px;
     height: 4px;
   }
+
   .scroll-container .grid::-webkit-scrollbar-track {
     background-color: transparent;
   }
+
   .scroll-container .grid::-webkit-scrollbar-thumb {
     background-color: #c1c1c1;
     border-radius: 15px;
@@ -54,8 +78,10 @@ body {
     padding: 10px 30px;
     padding-top: 80px;
   }
+
   .scroll-container .grid {
     padding-bottom: 7px;
   }
 }
+
 /*# sourceMappingURL=index.css.map */

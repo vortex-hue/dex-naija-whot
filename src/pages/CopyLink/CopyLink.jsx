@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Footer } from "../../components";
 import "../../styles/copylink.css";
@@ -18,9 +19,14 @@ function CopyLink() {
   }, [randomCode]);
 
   return (
-    <section className="copylink">
+    <section className="naija-theme-container copylink">
       <main>
-        <section className="inner">
+        <motion.section
+          className="inner"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", duration: 0.8 }}
+        >
           <p className="title">
             <span>PLAY</span> FRIEND
           </p>
@@ -47,7 +53,7 @@ function CopyLink() {
             </button>
           </div>
           <Link to={`/play-friend/${randomCode}`}>START GAME</Link>
-        </section>
+        </motion.section>
       </main>
       <aside>
         <svg

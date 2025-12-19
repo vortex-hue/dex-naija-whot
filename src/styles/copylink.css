@@ -1,77 +1,84 @@
 .copylink {
-  display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 1fr;
-      grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   height: 100vh;
+  /* Inherits naija-theme-container styles */
 }
 
 .copylink main {
-  -ms-grid-column: 2;
-  -ms-grid-column-span: 1;
   grid-column: 2 / 3;
   padding: 40px;
   padding-top: 130px;
   padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .copylink main .inner {
+  width: 100%;
   max-width: 450px;
-  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .copylink main p {
-  color: rgba(0, 0, 0, 0.72);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .copylink main .title {
   text-align: center;
-  font-size: 1.1em;
-  font-weight: 700;
+  font-size: 1.5em;
+  font-weight: 800;
   margin-bottom: 15px;
+  color: var(--naija-white);
 }
 
 .copylink main .title span {
-  color: #9b343d;
+  color: var(--naija-gold);
 }
 
 .copylink main .input-group {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   margin: 35px 0;
-  font-size: 0.8em;
+  font-size: 1em;
 }
 
 .copylink main .input-group input {
   all: unset;
-  width: 80%;
-  border-radius: 5px 0 0 5px;
-  background-color: #f0eeee;
-  padding: 6px 10px;
-  color: rgba(0, 0, 0, 0.47);
+  width: 100%;
+  border-radius: 8px 0 0 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 12px 15px;
+  color: #333;
   font-weight: 700;
+  border: 2px solid transparent;
 }
 
 .copylink main .input-group button {
   all: unset;
   cursor: pointer;
-  padding: 0 10px;
+  padding: 0 20px;
   text-align: center;
-  font-weight: 600;
-  color: #fff;
-  background-color: #1098f7;
-  border-radius: 0 5px 5px 0;
-  -webkit-transition: background-color 0.4s;
-  transition: background-color 0.4s;
+  font-weight: 700;
+  color: #004d2e;
+  background-color: var(--naija-gold);
+  border-radius: 0 8px 8px 0;
+  transition: all 0.3s;
+}
+
+.copylink main .input-group button:hover {
+  background-color: #ffe066;
+  transform: scale(1.02);
 }
 
 .copylink main .input-group button.copied {
+  background-color: #2ecc71;
+  color: white;
   cursor: default;
-}
-
-.copylink main .input-group button.copied, .copylink main .input-group button:hover {
-  background-color: #74c3fb;
 }
 
 .copylink main a {
@@ -80,106 +87,74 @@
   text-align: center;
   display: inline-block;
   width: 100%;
-  padding: 8px 0;
-  background-color: #007380;
-  border-radius: 5px;
-  font-weight: 600;
-  color: #fff;
-  font-size: 0.8em;
+  padding: 15px 0;
+  background-color: var(--naija-white);
+  border-radius: 50px;
+  font-weight: 800;
+  color: var(--naija-green);
+  font-size: 1.1em;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.copylink main a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .copylink aside {
-  -ms-grid-row: 1;
-  -ms-grid-row-span: 1;
   grid-row: 1 / 2;
   padding: 50px;
-  background-color: #fafcfe;
+  background-color: rgba(255, 255, 255, 0.05);
   height: 100vh;
-  padding-top: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.copylink aside p {
-  color: rgba(0, 0, 0, 0.42);
-  max-width: 500px;
-  margin: 0 auto;
+/* Adjust SVG color to match theme if possible, or just let it be light */
+.copylink aside svg path[fill="#EBEBEB"] {
+  fill: rgba(255, 255, 255, 0.1);
 }
 
-.copylink aside p em {
-  all: unset;
-  color: rgba(0, 0, 0, 0.79);
+.copylink aside svg path[fill="#F5F5F5"] {
+  fill: rgba(255, 255, 255, 0.2);
 }
 
-.copylink aside svg {
-  max-width: 350px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  margin-bottom: 60px;
+.copylink aside svg path[fill="#263238"] {
+  fill: var(--naija-gold);
 }
 
-.copylink .shapes svg {
-  max-width: 100%;
+.copylink aside svg path[fill="#407BFF"] {
+  fill: var(--naija-green);
 }
 
-.copylink .shapes .shape {
-  position: fixed;
-  right: 0;
-  -webkit-transform: translateX(40%);
-          transform: translateX(40%);
-  z-index: -1;
-  width: 250px;
-  --offset: -130px;
-}
-
-.copylink .shapes .shape:first-child {
-  top: var(--offset);
-}
-
-.copylink .shapes .shape:last-child {
-  bottom: var(--offset);
+.copylink aside svg path[fill="#BA4D3C"] {
+  fill: #ff6b6b;
 }
 
 @media screen and (max-width: 850px) {
   .copylink {
     display: block;
+    height: auto;
+    min-height: 100vh;
   }
+
   .copylink main {
     padding-top: 40px;
+    grid-column: 1 / -1;
   }
-  .copylink main .title {
-    font-size: 0.9em;
-  }
-  .copylink main p {
-    font-size: 0.8em;
-  }
-  .copylink main a,
-  .copylink main .input-group {
-    font-size: 0.7em;
-  }
-  .copylink main a {
-    padding: 6px 0;
-  }
+
   .copylink aside {
-    background-color: transparent;
-    padding: 0;
-    height: unset;
+    padding: 20px;
+    height: 300px;
+    background: transparent;
+    border: none;
   }
-  .copylink aside p {
-    display: none;
-  }
+
   .copylink aside svg {
-    width: 80%;
-    margin-top: 30px;
-  }
-  .copylink .shapes .shape {
-    width: 120px;
-    --offset: -140px;
-  }
-  .copylink .shapes .shape:last-child {
-    right: unset;
-    left: 0;
-    -webkit-transform: translateX(-40%);
-            transform: translateX(-40%);
+    max-height: 200px;
   }
 }
-/*# sourceMappingURL=copylink.css.map */
