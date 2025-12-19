@@ -118,9 +118,9 @@ function App() {
       // Emit specific tournament win event
       socket.emit("tournament_match_win", {
         room_id,
-        winnerStoredId: gameOverState.winner === 'user' ? storedId : 'opponent_id_placeholder', // improved logic needed if possible
-        tournamentId: null, // Backend should know based on room_id
-        matchId: null
+        winnerStoredId: gameOverState.winner === 'user' ? storedId : 'opponent_id_placeholder',
+        tournamentId,
+        matchId
       });
       // Fallback: The standard game_over might be enough if backend is smart.
       // But let's stick to the plan: redirect.
