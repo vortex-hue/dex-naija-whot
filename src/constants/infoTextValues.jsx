@@ -1,6 +1,6 @@
 const infoTextValues = {
   usersTurn: "It's your turn to make a move now",
-  computersTurn: "The computer is calculating it's moves",
+  computersTurn: "It's your Opponent turn, hold on",
   userPickedThree: "You were made to pick 3",
   userPickedTwo: "You were made to pick 2",
   userReceivedGeneralMarket: "General market",
