@@ -3,6 +3,6 @@ import Home from "./Home/Home";
 import CopyLink from "./CopyLink/CopyLink";
 import PlayFriend from "./PlayFriend/PlayFriend";
 import Tournament from "./Tournament/Tournament";
-import TournamentGame from "./TournamentGame/App";
+import TournamentGame from "./TournamentGame/TournamentGame";
 
 export { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame };
