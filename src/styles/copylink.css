@@ -1,18 +1,49 @@
 .copylink {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 100vh;
-  /* Inherits naija-theme-container styles */
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  /* Prevent horizontal scroll but allow vertical if needed */
+  /* Inherits naija-theme-container styles via class composition in JSX, but we add specificity here if needed */
+}
+
+/* Shapes Background Layer */
+.shapes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.shape {
+  position: absolute;
+}
+
+.shape:nth-child(1) {
+  top: -20px;
+  left: -20px;
+}
+
+.shape:nth-child(2) {
+  bottom: 0px;
+  right: 0px;
 }
 
 .copylink main {
   grid-column: 2 / 3;
   padding: 40px;
-  padding-top: 130px;
-  padding-bottom: 0;
+  padding-bottom: 100px;
+  /* Space for footer */
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1;
+  /* Above shapes */
+  position: relative;
 }
 
 .copylink main .inner {
@@ -23,18 +54,30 @@
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 .copylink main p {
   color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+.copylink main .talk {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.1em;
 }
 
 .copylink main .title {
   text-align: center;
-  font-size: 1.5em;
-  font-weight: 800;
-  margin-bottom: 15px;
+  font-size: 2.5em;
+  /* Larger title */
+  font-weight: 900;
+  margin-bottom: 10px;
   color: var(--naija-white);
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .copylink main .title span {
@@ -45,34 +88,43 @@
   display: flex;
   margin: 35px 0;
   font-size: 1em;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
 }
 
 .copylink main .input-group input {
   all: unset;
   width: 100%;
-  border-radius: 8px 0 0 8px;
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 12px 15px;
+  border-radius: 12px 0 0 12px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 15px 20px;
   color: #333;
   font-weight: 700;
   border: 2px solid transparent;
+  transition: background 0.3s;
+}
+
+.copylink main .input-group input:focus {
+  background-color: #fff;
 }
 
 .copylink main .input-group button {
   all: unset;
   cursor: pointer;
-  padding: 0 20px;
+  padding: 0 25px;
   text-align: center;
-  font-weight: 700;
+  font-weight: 800;
   color: #004d2e;
   background-color: var(--naija-gold);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 12px 12px 0;
   transition: all 0.3s;
+  white-space: nowrap;
 }
 
+/* Button hover handled by Framer Motion in JSX usually, but fallback here */
 .copylink main .input-group button:hover {
-  background-color: #ffe066;
-  transform: scale(1.02);
+  background-color: #ffd700;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
 }
 
 .copylink main .input-group button.copied {
@@ -87,74 +139,101 @@
   text-align: center;
   display: inline-block;
   width: 100%;
-  padding: 15px 0;
+  padding: 18px 0;
   background-color: var(--naija-white);
   border-radius: 50px;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--naija-green);
-  font-size: 1.1em;
-  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 1.2em;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
 }
 
-.copylink main a:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-}
-
+/* Aside section */
 .copylink aside {
   grid-row: 1 / 2;
   padding: 50px;
-  background-color: rgba(255, 255, 255, 0.05);
-  height: 100vh;
+  /* background-color: rgba(255, 255, 255, 0.05); Removed to let shapes show through cleanly or use blur */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 1;
+  position: relative;
 }
 
-/* Adjust SVG color to match theme if possible, or just let it be light */
-.copylink aside svg path[fill="#EBEBEB"] {
+.copylink aside p {
+  margin-top: 30px;
+  font-style: italic;
+  text-align: center;
+  color: var(--naija-white);
+  max-width: 80%;
+  font-size: 1.1em;
+  opacity: 0.8;
+}
+
+.copylink aside p em {
+  color: var(--naija-gold);
+  font-style: normal;
+  font-weight: bold;
+}
+
+/* SVG Theming override */
+.copylink aside svg path[fill="#EBEBEB"],
+.copylink aside svg path[fill="#E0E3EB"] {
   fill: rgba(255, 255, 255, 0.1);
 }
 
 .copylink aside svg path[fill="#F5F5F5"] {
-  fill: rgba(255, 255, 255, 0.2);
+  fill: rgba(255, 255, 255, 0.15);
 }
 
 .copylink aside svg path[fill="#263238"] {
-  fill: var(--naija-gold);
+  fill: var(--naija-dark);
+  /* Or make it gold? Let's stick to dark so it looks like "people" in silhouette if that's what it is, 
+     but slightly lighter dark to stand out on green. */
+  fill: #1a2f23;
 }
 
 .copylink aside svg path[fill="#407BFF"] {
-  fill: var(--naija-green);
+  fill: var(--naija-gold);
+  /* Pop color */
 }
 
-.copylink aside svg path[fill="#BA4D3C"] {
-  fill: #ff6b6b;
-}
-
+/* Responsive */
 @media screen and (max-width: 850px) {
   .copylink {
-    display: block;
-    height: auto;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
+    padding-bottom: 80px;
+    /* footer space */
   }
 
   .copylink main {
-    padding-top: 40px;
-    grid-column: 1 / -1;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    order: 2;
+    /* Main content below illustration on mobile? Or above? Usually above is better for "action". Let's try 1. */
+    order: 1;
   }
 
   .copylink aside {
     padding: 20px;
-    height: 300px;
-    background: transparent;
+    height: auto;
+    min-height: 300px;
     border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    order: 2;
   }
 
   .copylink aside svg {
     max-height: 200px;
+    width: auto;
+  }
+
+  .copylink main .title {
+    font-size: 2em;
   }
 }
