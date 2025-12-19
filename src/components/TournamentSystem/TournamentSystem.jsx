@@ -264,6 +264,9 @@ const TournamentSystem = () => {
                                         <h4>{t.name}</h4>
                                         <p>Players: {t.playersCount} / {t.size}</p>
                                         <p>Status: {t.status}</p>
+                                        {t.status === 'completed' && t.winner && (
+                                            <p className="winner-text">🏆 Winner: {t.winner.name}</p>
+                                        )}
                                         {t.status === 'waiting' && (
                                             <motion.button
                                                 onClick={() => joinTournament(t.id)}
