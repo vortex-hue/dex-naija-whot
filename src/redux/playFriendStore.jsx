@@ -2,8 +2,7 @@ import { applyMiddleware, createStore } from "redux";
 import combinedReducer from "./reducers/playFriendCombinedReducer";
 import socket from "../socket/socket";
 
-let pathname = window.location.pathname;
-let room_id = pathname.slice(pathname.length - 4, pathname.length);
+
 
 const enhancedReducer = (state, action) => {
   if (action.type === "INITIALIZE_DECK") {
@@ -29,6 +28,8 @@ const getUpdatedState = ({ getState }) => {
       action.type !== "TOGGLE_INFO_SHOWN" &&
       action.type !== "INITIALIZE_DECK"
     ) {
+      let pathname = window.location.pathname;
+      let room_id = pathname.slice(pathname.length - 4, pathname.length);
       socket.emit("sendUpdatedState", updatedState, room_id);
     }
 
