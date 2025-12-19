@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import audioService from '../../utils/audioService';
 import backgroundMusic from '../../utils/backgroundMusic';
 import './AudioControls.module.css';
@@ -8,7 +8,7 @@ const AudioControls = () => {
   const [isInstructionsOn, setIsInstructionsOn] = useState(true);
   const [volume, setVolume] = useState(0.5);
   const [usingAudioFile, setUsingAudioFile] = useState(true);
-  
+
   const musicRef = useRef(null);
 
   const backgroundMusicUrl = '/audio/Sakura-Girl-Yay-chosic.com_.mp3';
@@ -20,7 +20,7 @@ const AudioControls = () => {
         musicRef.current.volume = volume * 0.2;
         musicRef.current.loop = true;
       }
-      
+
       // Start music automatically on load
       if (isMusicOn) {
         if (musicRef.current) {
@@ -37,10 +37,12 @@ const AudioControls = () => {
           backgroundMusic.playRhythm();
         }
       }
-      
+
+      const audioNode = musicRef.current;
       return () => {
-        if (musicRef.current) {
-          musicRef.current.pause();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (audioNode) {
+          audioNode.pause();
         }
         backgroundMusic.stop();
       };
@@ -50,22 +52,7 @@ const AudioControls = () => {
   }, [volume, isMusicOn]);
 
   // Start music immediately when component mounts
-  useEffect(() => {
-    const startMusic = () => {
-      if (isMusicOn && musicRef.current) {
-        musicRef.current.play().catch(error => {
-          console.log('Audio file failed on mount, falling back to generated music:', error);
-          setUsingAudioFile(false);
-          backgroundMusic.setVolume(volume * 0.2);
-          backgroundMusic.playRhythm();
-        });
-      }
-    };
 
-    // Small delay to ensure audio element is ready
-    const timer = setTimeout(startMusic, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const toggleMusic = () => {
     try {
@@ -98,11 +85,13 @@ const AudioControls = () => {
     setIsInstructionsOn(!isInstructionsOn);
   };
 
-  const playInstruction = (instructionType) => {
+
+
+  const playInstruction = useCallback((instructionType) => {
     if (!isInstructionsOn) return;
-    
+
     audioService.setVolume(volume);
-    
+
     switch (instructionType) {
       case 'gameStart':
         audioService.playGameStart();
@@ -140,7 +129,7 @@ const AudioControls = () => {
       default:
         break;
     }
-  };
+  }, [isInstructionsOn, volume]);
 
   const handleVolumeChange = (e) => {
     const newVolume = parseFloat(e.target.value);
@@ -169,19 +158,19 @@ const AudioControls = () => {
     <div className="audio-controls">
       {/* Hidden audio element */}
       <audio ref={musicRef} src={backgroundMusicUrl} preload="auto" />
-      
+
       {/* Audio Controls UI */}
       <div className="audio-controls-panel">
         <div className="control-group">
-          <button 
+          <button
             className={`control-btn ${isMusicOn ? 'active' : ''}`}
             onClick={toggleMusic}
             title="Toggle Background Music"
           >
             {isMusicOn ? '🔊' : '🔇'} Music {usingAudioFile ? '(File)' : '(Generated)'}
           </button>
-          
-          <button 
+
+          <button
             className={`control-btn ${isInstructionsOn ? 'active' : ''}`}
             onClick={toggleInstructions}
             title="Toggle Audio Instructions"
@@ -189,7 +178,7 @@ const AudioControls = () => {
             {isInstructionsOn ? '📢' : '🔇'} Instructions
           </button>
         </div>
-        
+
         <div className="volume-control">
           <label htmlFor="volume">Volume:</label>
           <input
@@ -203,8 +192,8 @@ const AudioControls = () => {
             className="volume-slider"
           />
         </div>
-        
-        <button 
+
+        <button
           className="control-btn help-btn"
           onClick={() => playInstruction('general')}
           title="Listen to Game Rules"

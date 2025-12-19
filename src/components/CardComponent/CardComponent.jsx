@@ -69,7 +69,7 @@ function CardComponent({
     setTimeout(() => {
       playOpponentCard();
     }, delay);
-  }, [activeCard, userCards, opponentCards]);
+  }, [activeCard, userCards, opponentCards, isPlayed, isGameOver, playOpponentCard, delay]);
 
   const handleClick = () => {
     if (isMarketCard && whoIsToPlay === "user") {
@@ -92,9 +92,8 @@ function CardComponent({
   return (
     <Flipped flipId={shape + number}>
       <div
-        className={`${style.card} ${isShownState && style.shown} ${
-          isMine && style.mine
-        } ${isActiveCard && "active-card"}`}
+        className={`${style.card} ${isShownState && style.shown} ${isMine && style.mine
+          } ${isActiveCard && "active-card"}`}
         onClick={handleClick}
       >
         <div className={style.inner}>

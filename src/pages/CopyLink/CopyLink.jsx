@@ -14,7 +14,7 @@ function CopyLink() {
   }, []);
 
   useEffect(() => {
-    setLink(`http://localhost:3000/play-friend/${randomCode}`);
+    setLink(`${process.env.REACT_APP_FRONTEND_URL}/play-friend/${randomCode}`);
   }, [randomCode]);
 
   return (

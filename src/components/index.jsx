@@ -15,7 +15,7 @@ import MissionPanel from "./MissionPanel/MissionPanel";
 import PlayerTraits from "./PlayerTraits/PlayerTraits";
 import TournamentSystem from "./TournamentSystem/TournamentSystem";
 import LoyaltySystem from "./LoyaltySystem/LoyaltySystem";
-import BlockchainStatus from "./BlockchainStatus/BlockchainStatus";
+
 
 export {
   UserCards,
@@ -35,5 +35,5 @@ export {
   PlayerTraits,
   TournamentSystem,
   LoyaltySystem,
-  BlockchainStatus,
+
 };

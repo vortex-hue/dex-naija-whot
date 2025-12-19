@@ -2,7 +2,7 @@ import React from "react";
 import CardComponent from "../CardComponent/CardComponent";
 import { useSelector, useDispatch } from "react-redux";
 import useMarket from "../../utils/hooks/useMarket";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import goToMarket from "../../utils/functions/goToMarket";
 import useIsGameOver from "../../utils/hooks/useIsGameOver";
 import { setInfoText, setWhoIsToPlay } from "../../redux/actions";
@@ -21,14 +21,14 @@ function ComputerCards() {
   const dispatch = useDispatch();
   const { market } = useMarket();
 
-  const marketConfig = {
+  const marketConfig = useMemo(() => ({
     market,
     dispatch,
     usedCards,
     userCards,
     opponentCards,
     activeCard,
-  };
+  }), [market, dispatch, usedCards, userCards, opponentCards, activeCard]);
 
   const isGameOver = useIsGameOver();
 
@@ -72,7 +72,7 @@ function ComputerCards() {
         dispatch(setInfoText(infoTextValues.usersTurn));
       }, delay);
     }
-  }, [whoIsToPlay, userCards, opponentCards]);
+  }, [whoIsToPlay, userCards, opponentCards, isPlayedSet, dispatch, isGameOver, marketConfig]);
 
   return (
     <div className="scroll-container">

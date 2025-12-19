@@ -1,6 +1,9 @@
 const webpack = require('webpack');
 
 module.exports = {
+  babel: {
+    plugins: ['@babel/plugin-syntax-import-attributes'],
+  },
   webpack: {
     configure: (webpackConfig) => {
       // Add fallbacks for Node.js modules
@@ -23,6 +26,7 @@ module.exports = {
       webpackConfig.resolve.alias = {
         ...webpackConfig.resolve.alias,
         'process/browser': require.resolve('process/browser.js'),
+        '@react-native-async-storage/async-storage': false,
       };
 
       // Add plugins
@@ -44,6 +48,23 @@ module.exports = {
           );
         },
       ];
+
+      // Insert strict rule for @base-org/account at the top of oneOf to ensure it's hit
+      // This is necessary because react-scripts uses a oneOf array for rules
+      if (webpackConfig.module.rules) {
+        const oneOfRule = webpackConfig.module.rules.find(rule => rule.oneOf);
+        if (oneOfRule) {
+          oneOfRule.oneOf.unshift({
+            test: /\.js$/,
+            include: /node_modules\/@base-org\/account/,
+            loader: 'string-replace-loader',
+            options: {
+              search: / with \{ type: ['"]json['"] \}/g,
+              replace: '',
+            }
+          });
+        }
+      }
 
       return webpackConfig;
     },

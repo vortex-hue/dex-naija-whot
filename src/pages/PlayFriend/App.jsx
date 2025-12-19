@@ -19,8 +19,8 @@ import { useParams } from "react-router-dom";
 import socket from "../../socket/socket";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
 import useIsGameOver from "../../utils/hooks/useIsGameOver";
-import { useHoneycomb } from "../../contexts/HoneycombProvider";
-import { WalletMultiButton } from "../../contexts/WalletProvider";
+
+
 
 function App() {
   const { room_id } = useParams();
@@ -30,12 +30,11 @@ function App() {
     userIsOnline: false,
     opponentIsOnline: false,
   });
-  
-  const { trackGameEvent } = useHoneycomb();
 
-  const [activeCard, userCards, opponentCards, stateHasBeenInitialized] =
+
+
+  const [userCards, opponentCards, stateHasBeenInitialized] =
     useSelector((state) => [
-      state.activeCard,
       state.userCards,
       state.opponentCards,
       state.stateHasBeenInitialized,
@@ -91,13 +90,24 @@ function App() {
       socket.off("opponentOnlineStateChanged", handleOpponentOnlineState);
       socket.off("confirmOnlineState", handleConfirmOnlineState);
     };
-  }, []);
+  }, [dispatch, room_id]);
 
   useEffect(() => {
-    if (isGameOver().answer && stateHasBeenInitialized) {
-      socket.emit("game_over", room_id);
+    const gameOverState = isGameOver();
+    if (gameOverState.answer && stateHasBeenInitialized) {
+      let storedId = localStorage.getItem("storedId");
+      // If I am the winner, I can claim it. Or we just send the winner 'user' or 'opponent'
+      // Ideally we send the storedId of the winner.
+      // If winner is 'user', storedId is mine.
+      // If winner is 'opponent', we don't know their storedId easily without looking at state, 
+      // but simpler: just say "I lost" or "I won".
+
+      // Actually, let's just send the raw info and let backend decide.
+      // But purely client-side logic is risky. 
+      // Let's send { room_id, winner: gameOverState.winner, reporterStoredId: storedId }
+      socket.emit("game_over", { room_id, winner: gameOverState.winner, reporterStoredId: storedId });
     }
-  }, [isGameOver]);
+  }, [isGameOver, room_id, stateHasBeenInitialized]);
 
   if (errorText) return <ErrorPage errorText={errorText} />;
 
@@ -108,9 +118,7 @@ function App() {
   return (
     <Flipper flipKey={[...userCards, ...opponentCards]}>
       <div className="App">
-        <div className="wallet-container" style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 1001 }}>
-          <WalletMultiButton />
-        </div>
+
         <MissionPanel />
         <AudioControls />
         <OpponentCards />

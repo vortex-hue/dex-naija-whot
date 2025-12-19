@@ -4,22 +4,14 @@
   "private": true,
   "homepage": "http://localhost:3000",
   "dependencies": {
-    "@honeycomb-protocol/edge-client": "^0.0.7-beta.15",
-    "@honeycomb-protocol/hive-control": "^0.2.19-beta.34",
-    "@solana/pay": "^0.2.6",
-    "@solana/wallet-adapter-base": "^0.9.27",
-    "@solana/wallet-adapter-react": "^0.15.39",
-    "@solana/wallet-adapter-react-ui": "^0.9.39",
-    "@solana/wallet-adapter-wallets": "^0.19.37",
-    "@solana/web3.js": "^1.98.4",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
     "browserify-zlib": "^0.2.0",
-    "bs58": "^6.0.0",
     "buffer": "^6.0.3",
     "canvas-confetti": "^1.5.1",
     "crypto-browserify": "^3.12.1",
+    "framer-motion": "^12.23.26",
     "path-browserify": "^1.0.1",
     "process": "^0.11.10",
     "qrcode": "^1.5.4",
@@ -64,7 +56,9 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-syntax-import-attributes": "^7.27.1",
     "@craco/craco": "^7.1.0",
-    "gh-pages": "^3.2.3"
+    "gh-pages": "^3.2.3",
+    "string-replace-loader": "^3.3.0"
   }
 }

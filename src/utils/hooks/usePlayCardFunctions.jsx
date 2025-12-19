@@ -8,7 +8,7 @@ import {
 } from "../../redux/actions";
 import infoTextValues from "../../constants/infoTextValues";
 import { useLocation } from "react-router-dom";
-import { useHoneycomb } from "../../contexts/HoneycombProvider";
+
 
 function usePlayCardFunctions({
   shape,
@@ -26,14 +26,13 @@ function usePlayCardFunctions({
   }
 
   const dispatch = useDispatch();
-  const { trackGameEvent } = useHoneycomb();
+
 
   const playUserCard = () => {
     dispatch(removeUserCard({ shape, number }));
     dispatch(updateActiveCard({ shape, number }));
-    
-    // Track card played for missions
-    trackGameEvent('card_played');
+
+
     if (number === 1 || number === 8) {
       dispatch(setInfoText(infoTextValues.opponentSuspended));
       return;
