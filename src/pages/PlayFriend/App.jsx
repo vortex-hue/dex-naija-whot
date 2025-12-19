@@ -65,6 +65,11 @@ function App() {
 
     const handleConnect = () => {
       setOnlineState((prevState) => ({ ...prevState, userIsOnline: true }));
+      // Re-join room on reconnect
+      if (room_id && storedId) {
+        console.log("Reconnecting to room:", room_id);
+        socket.emit("join_room", { room_id, storedId });
+      }
     };
 
     const handleOpponentOnlineState = (opponentIsOnline) => {

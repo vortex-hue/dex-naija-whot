@@ -21,27 +21,51 @@ const Chat = ({ roomId, storedId }) => {
     useEffect(() => {
         const handleReceiveMessage = (msg) => {
             setMessages(prev => {
-                // Prevent duplicates if frontend logic fires twice
                 if (prev.find(m => m.id === msg.id)) return prev;
                 return [...prev, msg];
             });
             if (!isOpen) {
                 setIsUnread(true);
+            } else {
+                // If open, mark as read immediately
+                socket.emit('mark_read', { room_id: roomId, user_id: storedId });
             }
         };
 
         const handleChatHistory = (history) => {
             setMessages(history);
+            // If chat is open, mark history as read too (optional, but good practice)
+            if (isOpen) {
+                socket.emit('mark_read', { room_id: roomId, user_id: storedId });
+            }
+        };
+
+        const handleMessagesRead = ({ readerId }) => {
+            if (readerId !== storedId) {
+                // Someone else read MY messages
+                setMessages(prev => prev.map(msg =>
+                    msg.senderId === storedId ? { ...msg, status: 'read' } : msg
+                ));
+            }
         };
 
         socket.on('receive_message', handleReceiveMessage);
         socket.on('chat_history', handleChatHistory);
+        socket.on('messages_read', handleMessagesRead);
 
         return () => {
             socket.off('receive_message', handleReceiveMessage);
             socket.off('chat_history', handleChatHistory);
+            socket.off('messages_read', handleMessagesRead);
         };
-    }, [isOpen]);
+    }, [isOpen, roomId, storedId]);
+
+    // Also trigger mark_read when opening
+    useEffect(() => {
+        if (isOpen) {
+            socket.emit('mark_read', { room_id: roomId, user_id: storedId });
+        }
+    }, [isOpen, roomId, storedId]);
 
     const sendMessage = (e) => {
         e.preventDefault();
