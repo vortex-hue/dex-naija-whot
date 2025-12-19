@@ -137,7 +137,7 @@ function App() {
 
       return () => clearTimeout(timer);
     }
-  }, [isGameOver, room_id, stateHasBeenInitialized]);
+  }, [isGameOver, room_id, stateHasBeenInitialized, matchId, tournamentId]);
 
   if (errorText) return <ErrorPage errorText={errorText} />;
 
