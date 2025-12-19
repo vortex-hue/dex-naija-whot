@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 import socket from '../../socket/socket';
 import { useNavigate } from 'react-router-dom';
 import './TournamentSystem.css';
@@ -121,8 +122,72 @@ const TournamentSystem = () => {
         return <div className="bracket-container">{rounds}</div>;
     };
 
+    const launchConfetti = () => {
+        const duration = 5 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+        const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+        const interval = setInterval(function () {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            // Naija colors: Green (#008751) and White (#FFFFFF)
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#008751', '#FFFFFF', '#FFD700'] }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#008751', '#FFFFFF', '#FFD700'] }));
+        }, 250);
+    };
+
+    useEffect(() => {
+        if (activeTournament?.winner) {
+            launchConfetti();
+        }
+    }, [activeTournament?.winner]);
+
+    const ChampionModal = ({ winner }) => (
+        <motion.div
+            className="winner-modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
+            <motion.div
+                className="winner-modal-content"
+                initial={{ scale: 0.5, y: 100, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                transition={{ type: "spring", damping: 12 }}
+            >
+                <motion.div
+                    className="trophy-icon"
+                    animate={{ rotate: [0, -10, 10, -10, 0], scale: [1, 1.1, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                >
+                    🏆
+                </motion.div>
+                <div className="celebration-text">
+                    <h2>CHAMPION!</h2>
+                    <motion.div
+                        className="winner-name"
+                        animate={{ scale: [1, 1.1, 1], color: ['#FFD700', '#FFF', '#FFD700'] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                        {winner.name}
+                    </motion.div>
+                    <p>Undisputed Naija Whot Master</p>
+                </div>
+                <button className="close-victory-btn" onClick={() => setActiveTournament(null)}>Back to Lobby</button>
+            </motion.div>
+        </motion.div>
+    );
+
     return (
         <div className="tournament-system">
+            {/* ... existing header ... */}
             <motion.h2
                 className="section-title"
                 initial={{ y: -50, opacity: 0 }}
@@ -132,6 +197,7 @@ const TournamentSystem = () => {
             </motion.h2>
 
             <AnimatePresence>
+                {/* ... existing error/status ... */}
                 {error && (
                     <motion.div
                         className="error-message"
@@ -151,9 +217,15 @@ const TournamentSystem = () => {
                         {statusMessage}
                     </motion.div>
                 )}
+
+                {/* Winner Modal */}
+                {activeTournament?.winner && (
+                    <ChampionModal winner={activeTournament.winner} />
+                )}
             </AnimatePresence>
 
             {!activeTournament ? (
+                // ... Lobby ... 
                 <div className="tournament-lobby">
                     <motion.div
                         className="create-actions"
@@ -213,16 +285,7 @@ const TournamentSystem = () => {
 
                     {renderBracket(activeTournament)}
 
-                    {activeTournament.winner && (
-                        <motion.div
-                            className="winner-announcement"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1, rotate: 360 }}
-                            transition={{ type: "spring", duration: 1 }}
-                        >
-                            🎉 Champion: {activeTournament.winner.name} 🎉
-                        </motion.div>
-                    )}
+                    {/* Old announcer removed, replaced by Modal above */}
                 </div>
             )}
         </div>
