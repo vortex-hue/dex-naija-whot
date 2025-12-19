@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import socket from '../../socket/socket';
 import './Chat.css';
 
+// Simple 'pop' sound
+const notificationSound = new Audio("data:audio/mp3;base64,SUQzBAAAAAABAFRYVFgAAAASAAADbWFqb3JfYnJhbmQAbXA0MgBUWFRYAAAAEQAAA21pbm9yX3ZlcnNpb24AMABUWFRYAAAAHAAAA2NvbXBhdGlibHGVX2JyYW5kcwBtcDQyYXZjMQBUU1NFAAAADwAAA0xhdmY1Ny41Ni4xMDIAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVLFn8J1AAABAAAB8IAQMAhAkFwM+D/4P/w//D/8P/w//D/8P/w//D/8P/w//D/8P/w//D/8P/w//D/8P/w//D/8P/w//D/8MAAAABgAAAAABnENkAAACkAAABRDAwMAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwAAD/80DEAAABA0gAAAAA//NkxAAACpCQAABQAAAAAAf/zZMQAAAqQkAAAUAAAAAAP/zZMQAAAqQkAAAUAAAAAAP/zZMQAAAqQkAAAUAAAAAAP/zZMQAAAqQkAAAUAAAAAAP/zZMQAAAqQkAAAUAAAAAAP/zZMQAAAqQkAAAUAAAAAAA==");
+
 const Chat = ({ roomId, storedId }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
@@ -22,19 +25,23 @@ const Chat = ({ roomId, storedId }) => {
         const handleReceiveMessage = (msg) => {
             setMessages(prev => {
                 if (prev.find(m => m.id === msg.id)) return prev;
+                // Play sound if message is from opponent
+                if (msg.senderId !== storedId) {
+                    notificationSound.currentTime = 0;
+                    notificationSound.play().catch(e => console.log("Audio play failed", e));
+                }
                 return [...prev, msg];
             });
+
             if (!isOpen) {
                 setIsUnread(true);
             } else {
-                // If open, mark as read immediately
                 socket.emit('mark_read', { room_id: roomId, user_id: storedId });
             }
         };
 
         const handleChatHistory = (history) => {
             setMessages(history);
-            // If chat is open, mark history as read too (optional, but good practice)
             if (isOpen) {
                 socket.emit('mark_read', { room_id: roomId, user_id: storedId });
             }
@@ -42,7 +49,6 @@ const Chat = ({ roomId, storedId }) => {
 
         const handleMessagesRead = ({ readerId }) => {
             if (readerId !== storedId) {
-                // Someone else read MY messages
                 setMessages(prev => prev.map(msg =>
                     msg.senderId === storedId ? { ...msg, status: 'read' } : msg
                 ));
