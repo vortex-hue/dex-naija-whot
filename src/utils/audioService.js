@@ -9,7 +9,7 @@ class AudioService {
     this.volume = 0.8;
     this.rate = 0.9;
     this.pitch = 1.1;
-    
+
     this.initVoices();
   }
 
@@ -19,14 +19,23 @@ class AudioService {
       this.synth.onvoiceschanged = () => {
         this.voices = this.synth.getVoices();
         // Try to find a good English voice
-        this.currentVoice = this.voices.find(voice => 
+        this.currentVoice = this.voices.find(voice =>
           voice.lang.includes('en') && (
             voice.name.toLowerCase().includes('british') ||
-            voice.name.toLowerCase().includes('australian') ||
-            voice.name.toLowerCase().includes('american')
+            voice.name.toLowerCase().includes('google uk') ||
+            voice.name.toLowerCase().includes('english')
           )
         ) || this.voices.find(voice => voice.lang.includes('en')) || this.voices[0];
       };
+
+      // Trigger it manually just in case
+      if (this.synth.getVoices().length > 0) {
+        this.synth.onvoiceschanged();
+      }
+    } else {
+      // Fallback for browsers that don't support onvoiceschanged
+      this.voices = this.synth.getVoices();
+      this.currentVoice = this.voices[0];
     }
   }
 
@@ -41,7 +50,7 @@ class AudioService {
       utterance.volume = this.volume;
       utterance.rate = this.rate;
       utterance.pitch = this.pitch;
-      
+
       if (callback) {
         utterance.onend = callback;
       }
