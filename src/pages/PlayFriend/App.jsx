@@ -11,6 +11,7 @@ import {
   AudioControls,
   MissionPanel,
 } from "../../components";
+import Chat from "../../components/Chat/Chat";
 import { Flipper } from "react-flip-toolkit";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
@@ -127,7 +128,9 @@ function App() {
         <InfoArea />
         <GameOver />
         <Preloader />
+        <Preloader />
         <OnlineIndicators onlineState={onlineState} />
+        {room_id && <Chat roomId={room_id} storedId={localStorage.getItem("storedId")} />}
       </div>
     </Flipper>
   );
