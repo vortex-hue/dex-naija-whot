@@ -6,7 +6,7 @@ import confettiAnimation from "../../utils/functions/confettiAnimation";
 import { useEffect, useState } from "react";
 
 
-function GameOver() {
+function GameOver({ isTournament }) {
   const isGameOver = useIsGameOver();
   const [animationHasRun, setAnimationHasRun] = useState(false);
 
@@ -33,14 +33,22 @@ function GameOver() {
       <div className={style.inner}>
         <p className={style.title}>{title}</p>
         <p>{subtitle}</p>
-        <button
-          onClick={() => {
-            window.location.reload();
-          }}
-          className={style.btn}
-        >
-          PLAY AGAIN
-        </button>
+        {!isTournament ? (
+          <button
+            onClick={() => {
+              window.location.reload();
+            }}
+            className={style.btn}
+          >
+            PLAY AGAIN
+          </button>
+        ) : (
+          <p className={style.tournament_msg}>
+            {isGameOver().winner === "user"
+              ? "Victory! Proceeding to next round..."
+              : "Eliminated. Returning to lobby..."}
+          </p>
+        )}
       </div>
     </div>
   );
