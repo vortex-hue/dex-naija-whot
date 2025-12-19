@@ -1,159 +1,160 @@
 import React from "react";
-import "../../styles/home.css";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
 
+// Animation Variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 100 }
+  }
+};
+
+const floatVariants = {
+  animate: {
+    y: [0, -10, 0],
+    rotate: [0, 2, -2, 0],
+    transition: {
+      duration: 5,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }
+  }
+};
+
 function Home() {
   return (
-    <section className="home">
-      {/* Modern gradient background */}
-      <div className="hero-background">
-        <div className="gradient-overlay"></div>
-        <div className="floating-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-        </div>
-      </div>
+    <motion.section
+      className="home naija-theme"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      {/* Dynamic Background Pattern */}
+      <div className="naija-pattern-bg"></div>
 
       <div className="container">
-        {/* Header with blockchain branding */}
-        <header className="hero-header">
-          <div className="blockchain-badges">
-            <div className="badge honeycomb-badge">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#FF6B35"/>
-                <path d="M2 17L12 22L22 17L12 12L2 17Z" fill="#FF6B35"/>
-                <path d="M2 12L12 17L22 12L12 7L2 12Z" fill="#FF6B35"/>
-              </svg>
-              <span>Honeycomb Protocol</span>
-            </div>
-            <div className="badge solana-badge">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M4.5 16.5L19.5 3.5H7.5L4.5 6.5V16.5Z" fill="#9945FF"/>
-                <path d="M19.5 3.5L4.5 16.5H16.5L19.5 13.5V3.5Z" fill="#14F195"/>
-              </svg>
-              <span>Solana</span>
-            </div>
-          </div>
-        </header>
 
-        {/* Main hero section */}
+        {/* Hero Section */}
         <div className="hero-content">
-          <div className="hero-text">
-        <h1 className="title">
+          <motion.div className="hero-text" variants={itemVariants}>
+            <motion.div
+              className="badge-container"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: "spring" }}
+            >
+              <span className="naija-badge">🇳🇬 The No.1 Card Game</span>
+            </motion.div>
+
+            <h1 className="title">
               <span className="title-main">NAIJA</span>
               <span className="title-accent">WHOT</span>
-              <span className="title-subtitle">On-Chain Edition</span>
-        </h1>
-            
-        <p className="subtitle">
-              Experience the classic Nigerian card game reimagined with blockchain technology. 
-              Earn XP, complete missions, and build your on-chain reputation through Honeycomb Protocol.
+            </h1>
+
+            <p className="subtitle">
+              Oya! Challenge your friends, enter tournaments, and become the champion.
+              No wallet needed, just pure vibes and strategy.
             </p>
 
-            {/* Feature highlights */}
+            {/* Feature Grid */}
             <div className="features-grid">
-              <div className="feature-card">
-                <div className="feature-icon">🎯</div>
-                <h3>Mission System</h3>
-                <p>Complete quests and earn on-chain rewards</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">⭐</div>
-                <h3>Player Traits</h3>
-                <p>Build your reputation and unlock special abilities</p>
-              </div>
-              <div className="feature-card">
-                <div className="feature-icon">📈</div>
-                <h3>Progression</h3>
-                <p>Track your growth with permanent on-chain stats</p>
-              </div>
-              <div className="feature-card">
+              <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+                <div className="feature-icon">⚡</div>
+                <h3>E Dey Rush</h3>
+                <p>Fast-paced action</p>
+              </motion.div>
+              <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+                <div className="feature-icon">👥</div>
+                <h3>Multiplayer</h3>
+                <p>Play with guys</p>
+              </motion.div>
+              <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
                 <div className="feature-icon">🏆</div>
-                <h3>Leaderboards</h3>
-                <p>Compete with players worldwide</p>
-              </div>
+                <h3>Tournaments</h3>
+                <p>Win bragging rights</p>
+              </motion.div>
             </div>
-          </div>
 
-          <div className="hero-visual">
-            <div className="game-preview">
-              <img src={mockup} alt="Whot Game Preview" />
-              <div className="preview-overlay">
-                <div className="stats-panel">
-                  <div className="stat">
-                    <span className="stat-label">XP</span>
-                    <span className="stat-value">1,250</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-label">Level</span>
-                    <span className="stat-value">8</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-label">Missions</span>
-                    <span className="stat-value">12/20</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-      </div>
-        </div>
+            {/* CTA Buttons */}
+            <div className="cta-group">
+              <Link to="/play-computer">
+                <motion.button
+                  className="cta-btn primary"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  🎮 Play Computer
+                </motion.button>
+              </Link>
 
-        {/* Call to action */}
-        <div className="cta-section">
-        <div className="btn-group">
-            <Link to="/play-computer" className="cta-btn primary">
-              <span className="btn-icon">🎮</span>
-              <span>PLAY COMPUTER</span>
-              <span className="btn-subtitle">Practice Mode</span>
-            </Link>
-            
-            <div className="divider">
-              <span>OR</span>
-            </div>
-            
-            <Link to="/copylink" className="cta-btn secondary">
-              <span className="btn-icon">👥</span>
-              <span>PLAY FRIEND</span>
-              <span className="btn-subtitle">Multiplayer Mode</span>
-            </Link>
-            
-            <div className="divider">
-              <span>OR</span>
-            </div>
-            
-            <Link to="/tournaments" className="cta-btn tournament">
-              <span className="btn-icon">🏆</span>
-              <span>TOURNAMENTS</span>
-              <span className="btn-subtitle">Win SOL Prizes</span>
-            </Link>
-          </div>
+              <Link to="/copylink">
+                <motion.button
+                  className="cta-btn secondary"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  👥 Play Friend
+                </motion.button>
+              </Link>
 
-          {/* Blockchain features preview */}
-          <div className="blockchain-preview">
-            <h3>Powered by Blockchain</h3>
-            <div className="tech-stack">
-              <div className="tech-item">
-                <div className="tech-icon honeycomb">🐝</div>
-                <span>Honeycomb Protocol</span>
-              </div>
-              <div className="tech-item">
-                <div className="tech-icon solana">⚡</div>
-                <span>Solana</span>
-              </div>
-              <div className="tech-item">
-                <div className="tech-icon verxio">📊</div>
-                <span>Verxio</span>
-              </div>
+              <Link to="/tournaments">
+                <motion.button
+                  className="cta-btn tournament"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={{
+                    boxShadow: ["0 0 0px #FFD700", "0 0 20px #FFD700", "0 0 0px #FFD700"]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  🏆 Join Tournament
+                </motion.button>
+              </Link>
             </div>
-          </div>
+          </motion.div>
+
+          {/* Hero Visual */}
+          <motion.div className="hero-visual" variants={floatVariants} animate="animate">
+            <div className="game-preview-container">
+              <img src={mockup} alt="Whot Game" className="mockup-img" />
+              <motion.div
+                className="floating-card c1"
+                animate={{ y: [-15, 15], rotate: [5, -5] }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: "mirror" }}
+              >
+                🟪
+              </motion.div>
+              <motion.div
+                className="floating-card c2"
+                animate={{ y: [10, -10], rotate: [-5, 5] }}
+                transition={{ duration: 4, repeat: Infinity, repeatType: "mirror" }}
+              >
+                ⭐
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
       <Footer />
-    </section>
+    </motion.section>
   );
 }
 

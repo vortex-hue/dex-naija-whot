@@ -1,77 +1,35 @@
-/* Modern Home Page Styles */
-.home {
+/* Naija Theme Variables */
+:root {
+  --naija-green: #008751;
+  --naija-white: #FFFFFF;
+  --naija-gold: #FFD700;
+  --naija-dark: #004d2e;
+  --naija-black: #121212;
+}
+
+.home.naija-theme {
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-  color: white;
+  background: var(--naija-green);
+  color: var(--naija-white);
+  font-family: 'Inter', sans-serif;
 }
 
-/* Hero Background */
-.hero-background {
+/* Background Pattern */
+.naija-pattern-bg {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 20%),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.03) 0px, rgba(255, 255, 255, 0.03) 10px, transparent 10px, transparent 20px);
   z-index: 1;
 }
 
-.gradient-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 80% 20%, rgba(148, 69, 255, 0.1) 0%, transparent 50%),
-              radial-gradient(circle at 40% 40%, rgba(20, 241, 149, 0.05) 0%, transparent 50%);
-}
-
-.floating-shapes {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.shape {
-  position: absolute;
-  border-radius: 50%;
-  background: linear-gradient(45deg, rgba(255, 107, 53, 0.1), rgba(148, 69, 255, 0.1));
-  animation: float 6s ease-in-out infinite;
-}
-
-.shape-1 {
-  width: 100px;
-  height: 100px;
-  top: 10%;
-  left: 10%;
-  animation-delay: 0s;
-}
-
-.shape-2 {
-  width: 150px;
-  height: 150px;
-  top: 60%;
-  right: 15%;
-  animation-delay: 2s;
-}
-
-.shape-3 {
-  width: 80px;
-  height: 80px;
-  bottom: 20%;
-  left: 20%;
-  animation-delay: 4s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(180deg); }
-}
-
-/* Container */
 .container {
   position: relative;
   z-index: 2;
@@ -80,366 +38,203 @@
   padding: 0 20px;
 }
 
-/* Header */
-.hero-header {
-  padding: 20px 0;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.blockchain-badges {
-  display: flex;
-  gap: 15px;
-}
-
-.badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 25px;
-  font-size: 14px;
-  font-weight: 500;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.honeycomb-badge {
-  background: rgba(255, 107, 53, 0.1);
-  color: #FF6B35;
-}
-
-.solana-badge {
-  background: rgba(148, 69, 255, 0.1);
-  color: #9945FF;
-}
-
-/* Hero Content */
+/* Hero Section */
 .hero-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
   padding: 80px 0;
+  min-height: 80vh;
 }
 
-.hero-text {
-  max-width: 500px;
-}
-
+/* Typography */
 .title {
-  font-size: 4rem;
+  font-size: 5rem;
   font-weight: 900;
-  line-height: 1.1;
+  line-height: 1;
   margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: -2px;
 }
 
 .title-main {
   display: block;
-  color: #FF6B35;
-  text-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+  color: var(--naija-white);
+  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
 .title-accent {
   display: block;
-  background: linear-gradient(45deg, #9945FF, #14F195);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 20px rgba(148, 69, 255, 0.3);
-}
-
-.title-subtitle {
-  display: block;
-  font-size: 1.2rem;
-  color: #14F195;
-  font-weight: 400;
-  margin-top: 10px;
+  color: var(--naija-gold);
+  text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
 .subtitle {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 40px;
+  max-width: 480px;
+}
+
+/* Badge */
+.badge-container {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.naija-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
 }
 
 /* Features Grid */
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 40px;
-}
-
-.feature-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 20px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
-
-.feature-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 107, 53, 0.3);
-}
-
-.feature-icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-.feature-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #FF6B35;
-}
-
-.feature-card p {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.4;
-}
-
-/* Hero Visual */
-.hero-visual {
-  position: relative;
-}
-
-.game-preview {
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.game-preview img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.preview-overlay {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.stats-panel {
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 10px;
-  padding: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.stat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.stat:last-child {
-  margin-bottom: 0;
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.stat-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #14F195;
-}
-
-/* CTA Section */
-.cta-section {
-  text-align: center;
-  padding: 60px 0;
-}
-
-.btn-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
   margin-bottom: 40px;
 }
 
-.cta-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 20px 40px;
-  border-radius: 15px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  min-width: 200px;
-  backdrop-filter: blur(10px);
-  border: 2px solid transparent;
-}
-
-.cta-btn.primary {
-  background: linear-gradient(45deg, #FF6B35, #FF8E53);
-  color: white;
-  box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
-}
-
-.cta-btn.primary:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
-}
-
-.cta-btn.secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.cta-btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-5px);
-}
-
-.cta-btn.tournament {
-  background: linear-gradient(45deg, #FFD700, #FFA500);
-  color: #333;
-  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-}
-
-.cta-btn.tournament:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
-}
-
-.btn-icon {
-  font-size: 1.5rem;
-}
-
-.btn-subtitle {
-  font-size: 0.8rem;
-  opacity: 0.8;
-  font-weight: 400;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 500;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 0 15px;
-}
-
-/* Blockchain Preview */
-.blockchain-preview {
-  margin-top: 60px;
-}
-
-.blockchain-preview h3 {
-  font-size: 1.5rem;
-  margin-bottom: 30px;
-  color: #14F195;
-}
-
-.tech-stack {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.tech-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
+.feature-card {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+  text-align: center;
 }
 
-.tech-item:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.1);
+.feature-icon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
 }
 
-.tech-icon {
-  font-size: 2rem;
+.feature-card h3 {
+  font-size: 1rem;
+  color: var(--naija-gold);
+  margin-bottom: 4px;
 }
 
-.tech-item span {
-  font-size: 0.9rem;
-  font-weight: 500;
+.feature-card p {
+  font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.8);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero-content {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 40px 0;
-  }
-
-  .title {
-    font-size: 2.5rem;
-  }
-
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .btn-group {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .tech-stack {
-    gap: 20px;
-  }
-
-  .blockchain-badges {
-    flex-direction: column;
-    gap: 10px;
-  }
+/* Buttons */
+.cta-group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 480px) {
-  .container {
-    padding: 0 15px;
+.cta-btn {
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.cta-btn.primary {
+  background: var(--naija-white);
+  color: var(--naija-green);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cta-btn.secondary {
+  background: transparent;
+  color: var(--naija-white);
+  border: 2px solid var(--naija-white);
+}
+
+.cta-btn.tournament {
+  background: var(--naija-gold);
+  color: var(--naija-black);
+  box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+}
+
+/* Visuals */
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-preview-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.mockup-img {
+  width: 100%;
+  transform: rotate(-5deg);
+  border-radius: 20px;
+  box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.3);
+  border: 4px solid var(--naija-white);
+}
+
+.floating-card {
+  position: absolute;
+  width: 60px;
+  height: 90px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.c1 {
+  top: -20px;
+  right: -20px;
+  background: #9C27B0;
+}
+
+.c2 {
+  bottom: 40px;
+  left: -30px;
+  background: #FFD700;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-group {
+    justify-content: center;
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 3.5rem;
   }
 
-  .subtitle {
-    font-size: 1rem;
-  }
-
-  .cta-btn {
-    padding: 15px 30px;
-    min-width: 150px;
+  .mockup-img {
+    max-width: 300px;
   }
 }

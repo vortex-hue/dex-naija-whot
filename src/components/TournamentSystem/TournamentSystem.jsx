@@ -1,357 +1,228 @@
 import React, { useState, useEffect } from 'react';
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { createQR, encodeURL } from '@solana/pay';
-import QRCode from 'qrcode';
-import { useHoneycomb } from '../../contexts/HoneycombProvider';
-import { BLOCKCHAIN_CONFIG } from '../../config/blockchain-config';
+import { motion, AnimatePresence } from 'framer-motion';
+import socket from '../../socket/socket';
+import { useNavigate } from 'react-router-dom';
 import './TournamentSystem.css';
+import { generateRandomCode } from '../../utils/functions/generateRandomCode';
 
 const TournamentSystem = () => {
-    const { connection } = useConnection();
-    const { publicKey, sendTransaction } = useWallet();
-    const { playerProfile, trackGameEvent, blockchainService, walletBalance } = useHoneycomb();
+    const navigate = useNavigate();
+
+    // State
     const [tournaments, setTournaments] = useState([]);
     const [activeTournament, setActiveTournament] = useState(null);
-    const [paymentQR, setPaymentQR] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    // Real tournament wallet from blockchain config
-    const TOURNAMENT_WALLET = BLOCKCHAIN_CONFIG.TREASURY_WALLET;
+    const [userStoredId] = useState(() => {
+        let stored = localStorage.getItem('storedId');
+        if (!stored) {
+            stored = generateRandomCode(10);
+            localStorage.setItem('storedId', stored);
+        }
+        return stored;
+    });
+    const [error, setError] = useState('');
+    const [statusMessage, setStatusMessage] = useState('');
 
     useEffect(() => {
-        loadTournaments();
-    }, []);
+        // Initial load
+        socket.emit('get_tournaments');
 
-    const loadTournaments = () => {
-        const mockTournaments = [
-            {
-                id: 'daily_blitz',
-                name: 'Daily Blitz Tournament',
-                description: 'Quick 5-minute rounds, winner takes all',
-                entryFee: 0.1, // SOL
-                prizePool: 0.8, // SOL (80% of entry fees)
-                participants: 3,
-                maxParticipants: 8,
-                startTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
-                duration: 30, // minutes
-                status: 'open',
-                type: 'elimination',
-            },
-            {
-                id: 'weekly_championship',
-                name: 'Weekly Championship',
-                description: 'Best of 3 matches, high stakes tournament',
-                entryFee: 0.5, // SOL
-                prizePool: 3.5, // SOL
-                participants: 1,
-                maxParticipants: 4,
-                startTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
-                duration: 120, // minutes
-                status: 'open',
-                type: 'round_robin',
-            },
-            {
-                id: 'beginners_cup',
-                name: 'Beginners Cup',
-                description: 'For players level 5 and below',
-                entryFee: 0.05, // SOL
-                prizePool: 0.3, // SOL
-                participants: 7,
-                maxParticipants: 10,
-                startTime: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hours from now
-                duration: 45, // minutes
-                status: 'open',
-                type: 'swiss',
-                levelRequirement: { max: 5 },
-            },
-            {
-                id: 'masters_league',
-                name: 'Masters League',
-                description: 'Elite tournament for level 10+ players',
-                entryFee: 1.0, // SOL
-                prizePool: 7.0, // SOL
-                participants: 0,
-                maxParticipants: 6,
-                startTime: new Date(Date.now() + 48 * 60 * 60 * 1000), // 48 hours from now
-                duration: 180, // minutes
-                status: 'open',
-                type: 'elimination',
-                levelRequirement: { min: 10 },
+        // Socket listeners
+        socket.on('tournaments_list', (data) => {
+            setTournaments(data);
+            if (activeTournament) {
+                const updated = data.find(t => t.id === activeTournament.id);
+                if (updated) setActiveTournament(updated);
             }
-        ];
-        
-        setTournaments(mockTournaments);
-    };
+        });
 
-    const canJoinTournament = (tournament) => {
-        if (!playerProfile) return false;
-        if (tournament.participants >= tournament.maxParticipants) return false;
-        
-        if (tournament.levelRequirement) {
-            if (tournament.levelRequirement.min && playerProfile.level < tournament.levelRequirement.min) {
-                return false;
-            }
-            if (tournament.levelRequirement.max && playerProfile.level > tournament.levelRequirement.max) {
-                return false;
-            }
-        }
-        
-        return true;
-    };
-
-    const generatePaymentQR = async (tournament) => {
-        try {
-            const transferFields = {
-                recipient: TOURNAMENT_WALLET,
-                amount: tournament.entryFee,
-                reference: new PublicKey(publicKey), // Use player's wallet as reference
-                label: `Whot Tournament: ${tournament.name}`,
-                message: `Entry fee for ${tournament.name}`,
-            };
-
-            const url = encodeURL(transferFields);
-            
-            // Generate QR code as data URL
-            const qrDataURL = await QRCode.toDataURL(url.toString(), {
-                width: 300,
-                margin: 2,
-                color: {
-                    dark: '#000000',
-                    light: '#FFFFFF'
-                }
-            });
-            
-            return qrDataURL;
-        } catch (error) {
-            console.error('Error generating payment QR:', error);
-            return null;
-        }
-    };
-
-    const joinTournament = async (tournament) => {
-        if (!publicKey || !canJoinTournament(tournament)) return;
-
-        setLoading(true);
-        try {
-            console.log(`🏆 Joining tournament: ${tournament.name}`);
-            console.log(`💰 Entry fee: ${tournament.entryFee} SOL`);
-            console.log(`💳 Player balance: ${walletBalance} SOL`);
-            
-            // Check if player has enough SOL
-            if (walletBalance < tournament.entryFee) {
-                alert(`Insufficient balance. You need ${tournament.entryFee} SOL but only have ${walletBalance.toFixed(3)} SOL`);
-                setLoading(false);
-                return;
-            }
-
-            // Generate QR code for payment
-            const qr = await generatePaymentQR(tournament);
-            setPaymentQR(qr);
+        socket.on('tournament_joined', (tournament) => {
             setActiveTournament(tournament);
+            setStatusMessage('Joined tournament! Waiting for players...');
+        });
 
-            // Create blockchain transaction for tournament entry
-            const transaction = await blockchainService.createTournamentEntry(
-                publicKey.toString(),
-                tournament.id,
-                tournament.entryFee
-            );
-
-            console.log('🔗 Sending tournament entry transaction...');
-            const signature = await sendTransaction(transaction, connection);
-            console.log('📝 Transaction signature:', signature);
-
-            // Verify payment on blockchain
-            const isVerified = await blockchainService.verifyTournamentPayment(signature);
-            
-            if (isVerified) {
-                // Update tournament participants
-                setTournaments(prev => prev.map(t => 
-                    t.id === tournament.id 
-                        ? { ...t, participants: t.participants + 1 }
-                        : t
-                ));
-                
-                // Track tournament entry on blockchain
-                await trackGameEvent('tournament_joined', { 
-                    tournamentId: tournament.id,
-                    entryFee: tournament.entryFee,
-                    signature 
-                });
-                
-                alert(`✅ Successfully joined ${tournament.name}!\nTransaction: ${signature}`);
-                console.log(`🎉 Tournament entry successful: ${signature}`);
-            } else {
-                throw new Error('Payment verification failed');
+        socket.on('tournament_update', (tournament) => {
+            if (activeTournament && activeTournament.id === tournament.id) {
+                setActiveTournament(tournament);
+                if (tournament.status === 'active') {
+                    setStatusMessage('Tournament started! Check the bracket.');
+                }
+                if (tournament.status === 'completed') {
+                    setStatusMessage(`Tournament Over! Winner: ${tournament.winner?.name}`);
+                }
             }
+            setTournaments(prev => prev.map(t => t.id === tournament.id ? tournament : t));
+        });
 
-            setPaymentQR(null);
-            setActiveTournament(null);
+        socket.on('tournament_match_ready', ({ roomId, matchId, opponent }) => {
+            setStatusMessage(`Match ready vs ${opponent}! Redirecting...`);
+            setTimeout(() => {
+                navigate(`/play-friend/${roomId}`);
+            }, 1500);
+        });
 
-        } catch (error) {
-            console.error('❌ Error joining tournament:', error);
-            alert(`Failed to join tournament: ${error.message}`);
-        } finally {
-            setLoading(false);
-        }
+        socket.on('error', (msg) => setError(msg));
+
+        return () => {
+            socket.off('tournaments_list');
+            socket.off('tournament_joined');
+            socket.off('tournament_update');
+            socket.off('tournament_match_ready');
+            socket.off('error');
+        };
+    }, [activeTournament, navigate]);
+
+    const createTournament = (size) => {
+        socket.emit('create_tournament', { size, name: `Tournament ${Math.floor(Math.random() * 1000)}` });
     };
 
-    const getTournamentStatusBadge = (tournament) => {
-        const now = new Date();
-        if (tournament.startTime <= now) {
-            return <span className="status-badge live">🔴 LIVE</span>;
-        } else if (tournament.participants >= tournament.maxParticipants) {
-            return <span className="status-badge full">FULL</span>;
-        } else {
-            return <span className="status-badge open">OPEN</span>;
-        }
+    const joinTournament = (id) => {
+        if (!userStoredId) return;
+        socket.emit('join_tournament', { tournamentId: id, storedId: userStoredId, name: `Player ${userStoredId.substr(0, 4)}` });
     };
 
-    const formatTimeUntilStart = (startTime) => {
-        const now = new Date();
-        const diff = startTime - now;
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        
-        if (hours > 0) {
-            return `${hours}h ${minutes}m`;
-        } else {
-            return `${minutes}m`;
-        }
-    };
+    const renderBracket = (tournament) => {
+        if (!tournament) return null;
 
-    const getPrizeDistribution = (tournament) => {
-        const total = tournament.prizePool;
-        switch (tournament.type) {
-            case 'elimination':
-                return {
-                    '1st': (total * 0.7).toFixed(3),
-                    '2nd': (total * 0.2).toFixed(3),
-                    '3rd': (total * 0.1).toFixed(3),
-                };
-            case 'round_robin':
-                return {
-                    '1st': (total * 0.5).toFixed(3),
-                    '2nd': (total * 0.3).toFixed(3),
-                    '3rd': (total * 0.2).toFixed(3),
-                };
-            default:
-                return { '1st': total.toFixed(3) };
-        }
-    };
+        const rounds = [];
+        let matches = tournament.matches;
+        const totalRounds = Math.log2(tournament.size);
 
-    if (!publicKey) {
-        return (
-            <div className="tournament-system">
-                <div className="wallet-required">
-                    <h3>🔒 Wallet Required</h3>
-                    <p>Connect your Solana wallet to participate in tournaments</p>
-                </div>
-            </div>
-        );
-    }
+        for (let i = 1; i <= totalRounds; i++) {
+            const roundMatches = matches.filter(m => m.round === i);
+            rounds.push(
+                <motion.div
+                    key={i}
+                    className="bracket-round"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.2 }}
+                >
+                    <h4>Round {i}</h4>
+                    {roundMatches.map(m => (
+                        <motion.div
+                            key={m.id}
+                            className="bracket-match"
+                            whileHover={{ scale: 1.02 }}
+                        >
+                            <div className={`player ${m.winner?.name === m.p1?.name ? 'winner' : ''}`}>
+                                {m.p1 ? m.p1.name : 'Waiting...'}
+                            </div>
+                            <div className="vs">vs</div>
+                            <div className={`player ${m.winner?.name === m.p2?.name ? 'winner' : ''}`}>
+                                {m.p2 ? m.p2.name : 'Waiting...'}
+                            </div>
+                        </motion.div>
+                    ))}
+                    {roundMatches.length === 0 && <p className="placeholder">Matches TBD</p>}
+                </motion.div>
+            );
+        }
+
+        return <div className="bracket-container">{rounds}</div>;
+    };
 
     return (
         <div className="tournament-system">
-            <div className="tournament-header">
-                <h2>🏆 Tournament Arena</h2>
-                <p>Compete for SOL prizes in exciting tournaments</p>
-            </div>
+            <motion.h2
+                className="section-title"
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+            >
+                🏆 Tournaments
+            </motion.h2>
 
-            <div className="tournaments-grid">
-                {tournaments.map(tournament => {
-                    const prizeDistribution = getPrizeDistribution(tournament);
-                    const canJoin = canJoinTournament(tournament);
-                    
-                    return (
-                        <div key={tournament.id} className={`tournament-card ${!canJoin ? 'disabled' : ''}`}>
-                            <div className="tournament-header-card">
-                                <h3>{tournament.name}</h3>
-                                {getTournamentStatusBadge(tournament)}
-                            </div>
-                            
-                            <p className="tournament-description">{tournament.description}</p>
-                            
-                            <div className="tournament-details">
-                                <div className="detail-row">
-                                    <span className="label">Entry Fee:</span>
-                                    <span className="value">{tournament.entryFee} SOL</span>
-                                </div>
-                                <div className="detail-row">
-                                    <span className="label">Prize Pool:</span>
-                                    <span className="value prize">{tournament.prizePool} SOL</span>
-                                </div>
-                                <div className="detail-row">
-                                    <span className="label">Players:</span>
-                                    <span className="value">{tournament.participants}/{tournament.maxParticipants}</span>
-                                </div>
-                                <div className="detail-row">
-                                    <span className="label">Starts in:</span>
-                                    <span className="value">{formatTimeUntilStart(tournament.startTime)}</span>
-                                </div>
-                                {tournament.levelRequirement && (
-                                    <div className="detail-row">
-                                        <span className="label">Level Req:</span>
-                                        <span className="value">
-                                            {tournament.levelRequirement.min && `${tournament.levelRequirement.min}+`}
-                                            {tournament.levelRequirement.max && `≤${tournament.levelRequirement.max}`}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
+            <AnimatePresence>
+                {error && (
+                    <motion.div
+                        className="error-message"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                    >
+                        {error}
+                    </motion.div>
+                )}
+                {statusMessage && (
+                    <motion.div
+                        className="status-message"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                    >
+                        {statusMessage}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-                            <div className="prize-breakdown">
-                                <h4>Prize Distribution</h4>
-                                <div className="prizes">
-                                    {Object.entries(prizeDistribution).map(([place, amount]) => (
-                                        <div key={place} className="prize-item">
-                                            <span className="place">{place}:</span>
-                                            <span className="amount">{amount} SOL</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <button
-                                className={`join-btn ${!canJoin ? 'disabled' : ''}`}
-                                onClick={() => joinTournament(tournament)}
-                                disabled={!canJoin || loading}
-                            >
-                                {loading && activeTournament?.id === tournament.id ? (
-                                    'Processing...'
-                                ) : !canJoin ? (
-                                    tournament.participants >= tournament.maxParticipants ? 'Full' : 'Requirements not met'
-                                ) : (
-                                    `Join for ${tournament.entryFee} SOL`
-                                )}
-                            </button>
+            {!activeTournament ? (
+                <div className="tournament-lobby">
+                    <motion.div
+                        className="create-actions"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <h3>Create New Tournament</h3>
+                        <div className="button-group">
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(2)}>1v1 (2 Players)</motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(4)}>Bracket (4 Players)</motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(8)}>Bracket (8 Players)</motion.button>
                         </div>
-                    );
-                })}
-            </div>
+                    </motion.div>
 
-            {paymentQR && activeTournament && (
-                <div className="payment-modal">
-                    <div className="payment-content">
-                        <button 
-                            className="close-btn"
-                            onClick={() => {
-                                setPaymentQR(null);
-                                setActiveTournament(null);
-                                setLoading(false);
-                            }}
-                        >
-                            ×
-                        </button>
-                        <h3>Tournament Entry Payment</h3>
-                        <p>Scan QR code to pay {activeTournament.entryFee} SOL</p>
-                        <div className="qr-container">
-                            {paymentQR && <img src={paymentQR} alt="Payment QR Code" />}
-                        </div>
-                        <p className="payment-instructions">
-                            Use any Solana-compatible wallet to scan and pay
-                        </p>
+                    <div className="tournament-list">
+                        <h3>Available Tournaments</h3>
+                        {tournaments.length === 0 ? (
+                            <p className="no-data">No active tournaments. Create one!</p>
+                        ) : (
+                            <div className="list-grid">
+                                {tournaments.map((t, index) => (
+                                    <motion.div
+                                        key={t.id}
+                                        className="tournament-card"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        whileHover={{ y: -5 }}
+                                    >
+                                        <h4>{t.name}</h4>
+                                        <p>Players: {t.playersCount} / {t.size}</p>
+                                        <p>Status: {t.status}</p>
+                                        {t.status === 'waiting' && (
+                                            <motion.button
+                                                onClick={() => joinTournament(t.id)}
+                                                className="join-btn"
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                Join
+                                            </motion.button>
+                                        )}
+                                        {t.status !== 'waiting' && <button onClick={() => setActiveTournament(t)} className="view-btn">View</button>}
+                                    </motion.div>
+                                ))}
+                            </div>
+                        )}
                     </div>
+                </div>
+            ) : (
+                <div className="active-tournament-view">
+                    <div className="tournament-header">
+                        <h3>{activeTournament.name}</h3>
+                        <button onClick={() => setActiveTournament(null)} className="back-btn">Back to Lobby</button>
+                    </div>
+
+                    {renderBracket(activeTournament)}
+
+                    {activeTournament.winner && (
+                        <motion.div
+                            className="winner-announcement"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1, rotate: 360 }}
+                            transition={{ type: "spring", duration: 1 }}
+                        >
+                            🎉 Champion: {activeTournament.winner.name} 🎉
+                        </motion.div>
+                    )}
                 </div>
             )}
         </div>

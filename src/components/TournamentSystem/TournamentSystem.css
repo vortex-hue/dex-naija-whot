@@ -1,362 +1,139 @@
 .tournament-system {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+    padding: 2rem;
+    color: white;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-.wallet-required {
-  text-align: center;
-  padding: 60px 20px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border-radius: 20px;
-  color: white;
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-.wallet-required h3 {
-  margin: 0 0 15px 0;
-  font-size: 24px;
+.tournament-lobby {
+    display: grid;
+    gap: 2rem;
 }
 
-.wallet-required p {
-  margin: 0;
-  font-size: 16px;
-  opacity: 0.9;
+.create-actions, .tournament-list {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
 }
 
-.tournament-header {
-  text-align: center;
-  margin-bottom: 40px;
+.button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
-.tournament-header h2 {
-  margin: 0 0 10px 0;
-  font-size: 32px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.button-group button {
+    background: linear-gradient(135deg, #FCFF52 0%, #F1F514 100%);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+    color: black;
 }
 
-.tournament-header p {
-  margin: 0;
-  color: #666;
-  font-size: 18px;
+.button-group button:hover {
+    transform: scale(1.05);
 }
 
-.tournaments-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 25px;
+.list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 .tournament-card {
-  background: white;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.tournament-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-}
-
-.tournament-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-  border-color: #667eea;
-}
-
-.tournament-card.disabled {
-  opacity: 0.6;
-  transform: none;
-  cursor: not-allowed;
-}
-
-.tournament-card.disabled:hover {
-  transform: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.tournament-header-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.tournament-header-card h3 {
-  margin: 0;
-  color: #333;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.status-badge {
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.status-badge.open {
-  background: #e8f5e8;
-  color: #4CAF50;
-}
-
-.status-badge.live {
-  background: #ffe8e8;
-  color: #f44336;
-  animation: pulse 2s infinite;
-}
-
-.status-badge.full {
-  background: #f0f0f0;
-  color: #666;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-.tournament-description {
-  color: #666;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
-
-.tournament-details {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.detail-row:last-child {
-  margin-bottom: 0;
-}
-
-.label {
-  color: #666;
-  font-size: 14px;
-}
-
-.value {
-  color: #333;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.value.prize {
-  color: #4CAF50;
-  font-weight: 700;
-}
-
-.prize-breakdown {
-  background: linear-gradient(135deg, #fff9e6, #f0f8ff);
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
-
-.prize-breakdown h4 {
-  margin: 0 0 12px 0;
-  color: #333;
-  font-size: 16px;
-  text-align: center;
-}
-
-.prizes {
-  display: flex;
-  justify-content: space-around;
-  gap: 10px;
-}
-
-.prize-item {
-  text-align: center;
-  flex: 1;
-}
-
-.place {
-  display: block;
-  color: #666;
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-
-.amount {
-  display: block;
-  color: #667eea;
-  font-weight: bold;
-  font-size: 14px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .join-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  padding: 15px 20px;
-  border-radius: 25px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
 }
 
-.join-btn:hover:not(.disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+.join-btn:hover {
+    background: #45a049;
 }
 
-.join-btn.disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.join-btn.disabled:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-/* Payment Modal */
-.payment-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  backdrop-filter: blur(10px);
-}
-
-.payment-content {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 400px;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-}
-
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #666;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.close-btn:hover {
-  background: #f0f0f0;
-  color: #333;
-}
-
-.payment-content h3 {
-  margin: 0 0 15px 0;
-  color: #333;
-  font-size: 24px;
-}
-
-.payment-content p {
-  color: #666;
-  margin-bottom: 25px;
-}
-
-.qr-container {
-  display: flex;
-  justify-content: center;
-  margin: 25px 0;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 15px;
-}
-
-.payment-instructions {
-  color: #666;
-  font-size: 14px;
-  font-style: italic;
-  margin: 20px 0 0 0;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .tournament-system {
-    padding: 15px;
-  }
-  
-  .tournaments-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .tournament-card {
-    padding: 20px;
-  }
-  
-  .tournament-header h2 {
-    font-size: 26px;
-  }
-  
-  .tournament-header p {
-    font-size: 16px;
-  }
-  
-  .prizes {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .prize-item {
+.bracket-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
-  }
-  
-  .place {
-    display: inline;
-    margin-bottom: 0;
-  }
-  
-  .payment-content {
-    margin: 20px;
-    padding: 30px 20px;
-  }
+    margin-top: 2rem;
+    overflow-x: auto;
+}
+
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-width: 200px;
+    align-items: center;
+}
+
+.bracket-match {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    min-width: 180px;
+    border: 1px solid rgba(255, 255, 0, 0.2);
+}
+
+.player {
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player.winner {
+    color: #F1F514;
+    font-weight: bold;
+}
+
+.player:last-child {
+    border-bottom: none;
+}
+
+.vs {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0.2rem 0;
+}
+
+.status-message {
+    background: rgba(0, 100, 255, 0.2);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.view-btn, .back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
 }
