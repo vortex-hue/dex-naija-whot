@@ -16,8 +16,10 @@ import { Flipper } from "react-flip-toolkit";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import "../../index.css";
-import { useLocation } from "react-router-dom";
-
+import { useLocation, useParams } from "react-router-dom";
+import socket from "../../socket/socket";
+import { generateRandomCode } from "../../utils/functions/generateRandomCode";
+import useIsGameOver from "../../utils/hooks/useIsGameOver";
 // ... existing imports
 
 function App() {
@@ -26,6 +28,11 @@ function App() {
   const { isTournament, matchId, tournamentId } = location.state || {};
 
   const isGameOver = useIsGameOver();
+  const [errorText, setErrorText] = useState("");
+  const [onlineState, setOnlineState] = useState({
+    userIsOnline: false,
+    opponentIsOnline: false,
+  });
   // ... existing state
   const [userCards, opponentCards, stateHasBeenInitialized] =
     useSelector((state) => [
