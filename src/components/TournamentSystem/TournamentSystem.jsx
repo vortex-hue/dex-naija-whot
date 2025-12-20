@@ -291,6 +291,39 @@ const TournamentSystem = () => {
                         <button onClick={() => setActiveTournament(null)} className="back-btn">Back to Lobby</button>
                     </div>
 
+                    {/* Action Area for Active Players */}
+                    {(() => {
+                        const myMatch = activeTournament.matches.find(m =>
+                            m.round === activeTournament.currentRound &&
+                            !m.winner &&
+                            ((m.p1 && m.p1.storedId === userStoredId) || (m.p2 && m.p2.storedId === userStoredId))
+                        );
+
+                        if (myMatch && activeTournament.status === 'active') {
+                            return (
+                                <motion.div
+                                    className="match-ready-alert"
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                >
+                                    <h3>Round {activeTournament.currentRound} Match Ready!</h3>
+                                    <p>{myMatch.p1?.name} vs {myMatch.p2?.name}</p>
+                                    <button
+                                        className="join-match-btn"
+                                        onClick={() => {
+                                            // We need to request the match room ID again or just emit an event to get it
+                                            // But notifyMatchReady sends it. We can't easily get it here without backend support to "get_my_match"
+                                            // OR we can make the button trigger a 'reconnect_match' socket event.
+                                            socket.emit('request_match_info', { tournamentId: activeTournament.id, matchId: myMatch.id });
+                                        }}
+                                    >
+                                        ENTER MATCH
+                                    </button>
+                                </motion.div>
+                            );
+                        }
+                    })()}
+
                     {renderBracket(activeTournament)}
 
                     {activeTournament.status === 'completed' && activeTournament.winner && (
