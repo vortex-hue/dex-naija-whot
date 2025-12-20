@@ -259,3 +259,37 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
 }
+
+.match-ready-alert {
+    background: rgba(0, 135, 81, 0.9);
+    border: 2px solid #FFD700;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.match-ready-alert h3 {
+    color: #FFD700;
+    margin-bottom: 5px;
+}
+
+.join-match-btn {
+    background: #FFD700;
+    color: #008751;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 0 4px 0 #b39700;
+    transition: all 0.2s;
+}
+
+.join-match-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
