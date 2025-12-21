@@ -36,6 +36,8 @@ const enhancedReducer = (state, action) => {
   }
 };
 
+let syncTimeout = null;
+
 const getUpdatedState = ({ getState }) => {
   return (next) => (action) => {
     const returnValue = next(action);
@@ -47,9 +49,15 @@ const getUpdatedState = ({ getState }) => {
       action.type !== "TOGGLE_INFO_SHOWN" &&
       action.type !== "INITIALIZE_DECK"
     ) {
-      let pathname = window.location.pathname;
-      let room_id = pathname.slice(pathname.length - 4, pathname.length);
-      socket.emit("sendUpdatedState", updatedState, room_id);
+      if (syncTimeout) clearTimeout(syncTimeout);
+
+      syncTimeout = setTimeout(() => {
+        let pathname = window.location.pathname;
+        let room_id = pathname.slice(pathname.length - 4, pathname.length);
+        console.log("📡 Syncing state to server after batching...", action.type);
+        socket.emit("sendUpdatedState", updatedState, room_id);
+        syncTimeout = null;
+      }, 100); // 100ms debounce to batch multiple rapid actions (e.g. removeCard + updateActiveCard)
     }
 
     return returnValue;

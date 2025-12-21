@@ -9,6 +9,8 @@ class AudioService {
     this.volume = 0.8;
     this.rate = 0.9;
     this.pitch = 1.1;
+    this.lastSpeakTime = 0;
+    this.cooldown = 500; // 500ms cooldown
 
     this.initVoices();
   }
@@ -40,25 +42,38 @@ class AudioService {
   }
 
   speak(text, callback = null) {
+    const now = Date.now();
+    if (now - this.lastSpeakTime < this.cooldown) {
+      console.log("🔇 Audio service cooldown active, skipping:", text.substring(0, 20));
+      return;
+    }
+
     try {
+      this.lastSpeakTime = now;
       if (this.synth.speaking) {
         this.synth.cancel();
+        // Small pause after cancel before speaking again
+        setTimeout(() => this._performSpeak(text, callback), 50);
+      } else {
+        this._performSpeak(text, callback);
       }
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.voice = this.currentVoice;
-      utterance.volume = this.volume;
-      utterance.rate = this.rate;
-      utterance.pitch = this.pitch;
-
-      if (callback) {
-        utterance.onend = callback;
-      }
-
-      this.synth.speak(utterance);
     } catch (error) {
       console.log('Speech synthesis failed:', error);
     }
+  }
+
+  _performSpeak(text, callback) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = this.currentVoice;
+    utterance.volume = this.volume;
+    utterance.rate = this.rate;
+    utterance.pitch = this.pitch;
+
+    if (callback) {
+      utterance.onend = callback;
+    }
+
+    this.synth.speak(utterance);
   }
 
   // Game instructions
