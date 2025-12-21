@@ -83,9 +83,21 @@ class BackgroundMusicGenerator {
       this.interval = null;
     }
     this.isPlaying = false;
+    if (this.audioContext && this.audioContext.state === 'running') {
+      this.audioContext.suspend().catch(e => console.log('Audio suspend failed:', e));
+    }
   }
 
-  setVolume(volume) {
+  playRhythm() {
+    if (!this.audioContext) {
+      this.init();
+    }
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume().catch(e => console.log('Audio resume failed:', e));
+    }
+
+
+    if (this.isPlaying) return;
     this.volume = Math.max(0, Math.min(1, volume));
   }
 

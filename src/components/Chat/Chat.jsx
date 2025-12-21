@@ -30,7 +30,9 @@ const Chat = ({ roomId, storedId }) => {
                     notificationSound.currentTime = 0;
                     notificationSound.play().catch(e => console.log("Audio play failed", e));
                 }
-                return [...prev, msg];
+                const newMessages = [...prev, msg];
+                if (newMessages.length > 50) return newMessages.slice(newMessages.length - 50);
+                return newMessages;
             });
 
             if (!isOpen) {
