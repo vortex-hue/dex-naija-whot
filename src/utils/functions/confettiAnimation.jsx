@@ -38,6 +38,8 @@ const confettiAnimation = (confetti) => {
       },
     });
   }, 250);
+
+  return () => clearInterval(interval);
 };
 
 export default confettiAnimation;

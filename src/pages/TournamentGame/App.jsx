@@ -154,7 +154,6 @@ function App() {
         <InfoArea />
         <GameOver isTournament={true} />
         <Preloader />
-        <Preloader />
         <OnlineIndicators onlineState={onlineState} />
         {room_id && <Chat roomId={room_id} storedId={localStorage.getItem("storedId")} />}
       </div>

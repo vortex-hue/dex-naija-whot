@@ -20,10 +20,14 @@ function GameOver({ isTournament }) {
   useEffect(() => {
 
 
+    let cleanup;
     if (isGameOver().winner === "user" && !animationHasRun) {
-      confettiAnimation(confetti);
+      cleanup = confettiAnimation(confetti);
       setAnimationHasRun(true);
     }
+    return () => {
+      if (cleanup) cleanup();
+    };
   }, [isGameOver, animationHasRun]);
 
   return (
