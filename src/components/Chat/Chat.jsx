@@ -123,17 +123,17 @@ const Chat = ({ roomId, storedId }) => {
                         </div>
 
                         <div className="chat-messages">
-                            {messages.length === 0 ? (
+                            {(messages || []).length === 0 ? (
                                 <p className="chat-empty">No messages yet. Say hi!</p>
                             ) : (
-                                messages.map((msg, index) => (
+                                (messages || []).map((msg, index) => (
                                     <div
                                         key={msg.id || index}
                                         className={`chat-bubble ${msg.senderId === storedId ? 'mine' : 'theirs'}`}
                                     >
-                                        <div className="text">{msg.text}</div>
+                                        <div className="text">{msg.text || ""}</div>
                                         <div className="time">
-                                            {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ""}
                                         </div>
                                     </div>
                                 ))
