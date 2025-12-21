@@ -29,7 +29,9 @@ export const sanitizeState = (state) => {
     }
   });
 
-  if (!state.activeCard || typeof state.activeCard !== 'object') {
+  const isValidCard = (c) => c && typeof c === 'object' && c.shape && c.number;
+
+  if (!isValidCard(state.activeCard)) {
     sanitized.activeCard = {};
     hasChanged = true;
   }

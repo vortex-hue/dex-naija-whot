@@ -37,6 +37,44 @@ describe('Redux State Sanitization', () => {
         expect(cleanState.usedCards[0]).toEqual({ shape: 'star', number: 1 });
     });
 
+    it('should maintain reference stability if state is already clean', () => {
+        const cleanState = {
+            userCards: [{ shape: 'star', number: 1 }],
+            opponentCards: [],
+            usedCards: [],
+            deck: [{ shape: 'circle', number: 2 }],
+            activeCard: { shape: 'triangle', number: 5 }
+        };
+
+        const result = sanitizeState(cleanState);
+        expect(result).toBe(cleanState); // Same reference
+    });
+
+    it('should detect and fix invalid activeCard objects', () => {
+        const invalidStates = [
+            { activeCard: null },
+            { activeCard: [] },
+            { activeCard: 'not an object' },
+            { activeCard: { shape: 'broken' } } // missing number
+        ];
+
+        invalidStates.forEach(s => {
+            const sanitized = sanitizeState(s);
+            expect(sanitized.activeCard).toEqual({});
+        });
+    });
+
+    it('should ignore non-card-array properties', () => {
+        const stateWithExtra = {
+            userCards: [],
+            score: 100,
+            config: { x: 1 }
+        };
+        const sanitized = sanitizeState(stateWithExtra);
+        expect(sanitized.score).toBe(100);
+        expect(sanitized.config).toEqual({ x: 1 });
+    });
+
     it('should handle missing arrays by defaulting to empty arrays', () => {
         const corruptedState = {
             userCards: null,
