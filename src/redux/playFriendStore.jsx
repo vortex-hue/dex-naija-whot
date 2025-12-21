@@ -5,18 +5,35 @@ import socket from "../socket/socket";
 
 
 const enhancedReducer = (state, action) => {
-  if (action.type === "INITIALIZE_DECK") {
-    if (!action.payload || typeof action.payload !== 'object') return state;
-    return action.payload;
-  }
+  try {
+    if (action.type === "INITIALIZE_DECK") {
+      if (!action.payload || typeof action.payload !== 'object') {
+        console.warn("Redux: Invalid INITIALIZE_DECK payload", action.payload);
+        return state;
+      }
+      return action.payload;
+    }
 
-  if (action.type === "UPDATE_STATE") {
-    const { playerOneState, playerTwoState } = action.payload;
-    let newState = state.player === "one" ? playerOneState : playerTwoState;
-    return { ...newState, infoShown: state.infoShown };
-  }
+    if (action.type === "UPDATE_STATE") {
+      if (!action.payload) {
+        console.warn("Redux: Missing payload for UPDATE_STATE");
+        return state;
+      }
+      const { playerOneState, playerTwoState } = action.payload;
+      if (!playerOneState || !playerTwoState) {
+        console.warn("Redux: Incomplete payload for UPDATE_STATE", action.payload);
+        return state;
+      }
+      let newState = state.player === "one" ? playerOneState : playerTwoState;
+      // Preserve local UI state that server doesn't know about
+      return { ...newState, infoShown: state.infoShown || false };
+    }
 
-  return combinedReducer(state, action);
+    return combinedReducer(state, action);
+  } catch (error) {
+    console.error("Redux Reducer Crash:", error, action);
+    return state; // Return previous state on crash to prevent white screen
+  }
 };
 
 const getUpdatedState = ({ getState }) => {
