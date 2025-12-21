@@ -47,6 +47,7 @@ const TournamentSystem = () => {
         });
 
         socket.on('tournament_update', (tournament) => {
+            console.log(`DEBUG: Update for ${tournament.id}. Participants on server:`, tournament.participants);
             if (activeTournament && activeTournament.id === tournament.id) {
                 setActiveTournament(tournament);
                 if (tournament.status === 'active') {
