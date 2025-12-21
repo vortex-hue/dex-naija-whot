@@ -32,6 +32,8 @@ function App() {
     opponentIsOnline: false,
   });
   const [remoteGameOver, setRemoteGameOver] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [connectionHanged, setConnectionHanged] = useState(false);
 
 
 
@@ -83,6 +85,17 @@ function App() {
       setRemoteGameOver(winnerStoredId);
     };
 
+    const handleTimerUpdate = ({ timeLeft: seconds }) => {
+      setTimeLeft(seconds);
+    };
+
+    const syncGame = () => {
+      console.log("🔄 Manual Sync Requested");
+      socket.emit("join_room", { room_id, storedId });
+    };
+
+    window.syncWhotGame = syncGame;
+
     socket.emit("join_room", { room_id, storedId });
     socket.on("dispatch", handleDispatch);
     socket.on("error", handleError);
@@ -91,6 +104,16 @@ function App() {
     socket.on("opponentOnlineStateChanged", handleOpponentOnlineState);
     socket.on("confirmOnlineState", handleConfirmOnlineState);
     socket.on("match_over", handleMatchOver);
+    socket.on("timer_update", handleTimerUpdate);
+
+    // SAFETY: If after 10 seconds we are still 'Connecting', show an error or try to re-join
+    const connectionTimer = setTimeout(() => {
+      if (!stateHasBeenInitialized) {
+        console.warn("⌛ Connection hanging... attempting force-sync");
+        socket.emit("join_room", { room_id, storedId });
+        setConnectionHanged(true);
+      }
+    }, 10000);
 
     return () => {
       socket.off("dispatch", handleDispatch);
@@ -100,8 +123,10 @@ function App() {
       socket.off("opponentOnlineStateChanged", handleOpponentOnlineState);
       socket.off("confirmOnlineState", handleConfirmOnlineState);
       socket.off("match_over", handleMatchOver);
+      socket.off("timer_update", handleTimerUpdate);
+      clearTimeout(connectionTimer);
     };
-  }, [dispatch, room_id]);
+  }, [dispatch, room_id, stateHasBeenInitialized]);
 
   useEffect(() => {
     const gameOverState = isGameOver();
@@ -132,6 +157,21 @@ function App() {
   return (
     <Flipper flipKey={flipKey}>
       <div className="App">
+        {timeLeft !== null && timeLeft <= 30 && timeLeft > 0 && (
+          <div className="round-timer-overlay">
+            <div className="timer-content">
+              <span>ROUND ENDING IN:</span>
+              <span className={`timer-seconds ${timeLeft <= 10 ? 'urgent' : ''}`}>{timeLeft}s</span>
+            </div>
+          </div>
+        )}
+
+        {connectionHanged && !stateHasBeenInitialized && (
+          <div className="connection-error-overlay">
+            <p>Taking longer than usual...</p>
+            <button onClick={() => window.location.reload()}>Refresh Page</button>
+          </div>
+        )}
 
         <MissionPanel />
         <AudioControls />
@@ -139,6 +179,13 @@ function App() {
         <CenterArea />
         <UserCards />
         <InfoArea />
+
+        <div className="game-controls-overlay">
+          <button className="sync-btn" onClick={() => window.syncWhotGame()}>
+            <span className="sync-icon">🔄</span> STUCK? SYNC
+          </button>
+        </div>
+
         <GameOver remoteGameOver={remoteGameOver} />
         <Preloader />
         <OnlineIndicators onlineState={onlineState} />

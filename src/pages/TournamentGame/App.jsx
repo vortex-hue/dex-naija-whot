@@ -34,6 +34,8 @@ function App() {
     opponentIsOnline: false,
   });
   const [remoteGameOver, setRemoteGameOver] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null); // Round timer countdown
+  const [connectionHanged, setConnectionHanged] = useState(false);
   // ... existing state
   const userCards = useSelector((state) => state.userCards || []);
   const opponentCards = useSelector((state) => state.opponentCards || []);
@@ -112,6 +114,18 @@ function App() {
       }
     };
 
+    const handleTimerUpdate = ({ timeLeft: seconds }) => {
+      setTimeLeft(seconds);
+    };
+
+    const syncGame = () => {
+      console.log("🔄 Manual Sync Requested");
+      socket.emit("join_room", { room_id, storedId, isTournament, matchId, tournamentId });
+    };
+
+    // Expose syncGame for the UI
+    window.syncWhotGame = syncGame;
+
     socket.on("dispatch", handleDispatch);
     socket.on("error", handleError);
     socket.on("disconnect", handleDisconnect);
@@ -120,10 +134,20 @@ function App() {
     socket.on("confirmOnlineState", handleConfirmOnlineState);
     socket.on("tournament_update", handleTournamentUpdate);
     socket.on("match_over", handleMatchOver);
+    socket.on("timer_update", handleTimerUpdate);
     socket.on("tournaments_list", (list) => {
       const found = list.find(t => t.id === tournamentId);
       if (found) setActiveTournament(found);
     });
+
+    // SAFETY: If after 10 seconds we are still 'Connecting', show an error or try to re-join
+    const connectionTimer = setTimeout(() => {
+      if (!stateHasBeenInitialized) {
+        console.warn("⌛ Connection hanging... attempting force-sync");
+        socket.emit("join_room", { room_id, storedId, isTournament, matchId, tournamentId });
+        setConnectionHanged(true);
+      }
+    }, 10000);
 
     return () => {
       socket.off("dispatch", handleDispatch);
@@ -134,9 +158,11 @@ function App() {
       socket.off("confirmOnlineState", handleConfirmOnlineState);
       socket.off("tournament_update", handleTournamentUpdate);
       socket.off("match_over", handleMatchOver);
+      socket.off("timer_update", handleTimerUpdate);
       socket.off("tournaments_list");
+      clearTimeout(connectionTimer);
     };
-  }, [dispatch, room_id, isTournament, matchId, tournamentId]);
+  }, [dispatch, room_id, isTournament, matchId, tournamentId, stateHasBeenInitialized]);
 
   useEffect(() => {
     // Voice Instructions Integration
@@ -193,12 +219,36 @@ function App() {
     <Flipper flipKey={flipKey}>
       <div className="App tournament-mode">
         <div className="tournament-header-badge">🏆 TOURNAMENT MATCH</div>
+
+        {timeLeft !== null && timeLeft <= 30 && timeLeft > 0 && (
+          <div className="round-timer-overlay">
+            <div className="timer-content">
+              <span>ROUND ENDING IN:</span>
+              <span className={`timer-seconds ${timeLeft <= 10 ? 'urgent' : ''}`}>{timeLeft}s</span>
+            </div>
+          </div>
+        )}
+
+        {connectionHanged && !stateHasBeenInitialized && (
+          <div className="connection-error-overlay">
+            <p>Taking longer than usual...</p>
+            <button onClick={() => window.location.reload()}>Refresh Page</button>
+          </div>
+        )}
+
         <MissionPanel />
         <AudioControls />
         <OpponentCards />
         <CenterArea />
         <UserCards />
         <InfoArea />
+
+        <div className="game-controls-overlay">
+          <button className="sync-btn" onClick={() => window.syncWhotGame()}>
+            <span className="sync-icon">🔄</span> STUCK? SYNC
+          </button>
+        </div>
+
         <GameOver isTournament={true} tournamentData={activeTournament} currentMatchId={matchId} remoteGameOver={remoteGameOver} />
         <Preloader />
         <OnlineIndicators onlineState={onlineState} />
