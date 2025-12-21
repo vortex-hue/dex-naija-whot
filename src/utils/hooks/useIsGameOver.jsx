@@ -2,8 +2,8 @@ import { useSelector } from "react-redux";
 
 function useIsGameOver() {
   const [userCards, opponentCards] = useSelector((state) => [
-    state.userCards,
-    state.opponentCards,
+    state.userCards || [],
+    state.opponentCards || [],
   ]);
 
   const isGameOver = () => {
