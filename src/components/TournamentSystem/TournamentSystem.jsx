@@ -273,6 +273,9 @@ const TournamentSystem = () => {
                                             <h4>{t.name}</h4>
                                             <p>Players: {t.playersCount} / {t.size}</p>
                                             <p>Status: {t.status}</p>
+                                            <div className="debug-ids" style={{ fontSize: '0.6rem', opacity: 0.5, marginBottom: '5px' }}>
+                                                IDs: {t.participants?.join(', ') || 'None'}
+                                            </div>
                                             {t.status === 'completed' && t.winner && (
                                                 <p className="winner-text">🏆 Winner: {t.winner.name}</p>
                                             )}
