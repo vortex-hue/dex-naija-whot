@@ -27,43 +27,55 @@ const TournamentSystem = () => {
     const [statusMessage, setStatusMessage] = useState('');
     const [showCelebration, setShowCelebration] = useState(false);
 
+    // Use refs to access latest state in stable socket listeners
+    const activeTournamentRef = React.useRef(activeTournament);
+    const tournamentsRef = React.useRef(tournaments);
+
+    useEffect(() => {
+        activeTournamentRef.current = activeTournament;
+        tournamentsRef.current = tournaments;
+    }, [activeTournament, tournaments]);
+
     useEffect(() => {
         // Initial load
         socket.emit('get_tournaments');
 
-        // Socket listeners
-        socket.on('tournaments_list', (data) => {
+        const onTournamentsList = (data) => {
             console.log("RAW SOCKET DATA (tournaments_list):", data);
             if (!Array.isArray(data)) return;
             setTournaments(data);
-            if (activeTournament) {
-                const updated = data.find(t => t.id === activeTournament.id);
+
+            const currentActive = activeTournamentRef.current;
+            if (currentActive) {
+                const updated = data.find(t => t.id === currentActive.id);
                 if (updated) setActiveTournament(updated);
             }
-        });
+        };
 
-        socket.on('tournament_joined', (tournament) => {
+        const onTournamentJoined = (tournament) => {
             setActiveTournament(tournament);
             setStatusMessage('Joined tournament! Waiting for players...');
-        });
+        };
 
-        socket.on('tournament_update', (tournament) => {
-            console.log(`DEBUG: Update for ${tournament.id}. Participants on server:`, tournament.participants);
-            if (activeTournament && activeTournament.id === tournament.id) {
+        const onTournamentUpdate = (tournament) => {
+            // console.log(`DEBUG: Update for ${tournament.id}`);
+            const currentActive = activeTournamentRef.current;
+
+            if (currentActive && currentActive.id === tournament.id) {
                 setActiveTournament(tournament);
                 if (tournament.status === 'active') {
                     setStatusMessage('Tournament started! Check the bracket.');
                 }
-                if (tournament.status === 'completed' && activeTournament.status !== 'completed') {
+                if (tournament.status === 'completed' && currentActive.status !== 'completed') {
                     setStatusMessage(`Tournament Over! Winner: ${tournament.winner?.name}`);
                     setShowCelebration(true);
                     launchConfetti();
                 }
             }
             setTournaments(prev => prev.map(t => t.id === tournament.id ? tournament : t));
-        });
+        };
 
-        socket.on('tournament_match_ready', ({ roomId, matchId, opponent, tournamentId }) => {
+        const onMatchReady = ({ roomId, matchId, opponent, tournamentId }) => {
             setStatusMessage(`Match ready vs ${opponent}! Redirecting...`);
             setTimeout(() => {
                 navigate(`/play-tournament/${roomId}`, {
@@ -74,18 +86,25 @@ const TournamentSystem = () => {
                     }
                 });
             }, 1500);
-        });
+        };
 
-        socket.on('error', (msg) => setError(msg));
+        const onError = (msg) => setError(msg);
+
+        // Socket listeners
+        socket.on('tournaments_list', onTournamentsList);
+        socket.on('tournament_joined', onTournamentJoined);
+        socket.on('tournament_update', onTournamentUpdate);
+        socket.on('tournament_match_ready', onMatchReady);
+        socket.on('error', onError);
 
         return () => {
-            socket.off('tournaments_list');
-            socket.off('tournament_joined');
-            socket.off('tournament_update');
-            socket.off('tournament_match_ready');
-            socket.off('error');
+            socket.off('tournaments_list', onTournamentsList);
+            socket.off('tournament_joined', onTournamentJoined);
+            socket.off('tournament_update', onTournamentUpdate);
+            socket.off('tournament_match_ready', onMatchReady);
+            socket.off('error', onError);
         };
-    }, [activeTournament, navigate]);
+    }, [navigate]);
 
     const createTournament = (size) => {
         socket.emit('create_tournament', { size, name: `Tournament ${Math.floor(Math.random() * 1000)}` });

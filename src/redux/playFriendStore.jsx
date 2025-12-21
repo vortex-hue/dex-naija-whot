@@ -42,6 +42,7 @@ const getUpdatedState = ({ getState }) => {
 
     const updatedState = getState();
     if (
+      !action.isFromServer &&
       action.type !== "UPDATE_STATE" &&
       action.type !== "TOGGLE_INFO_SHOWN" &&
       action.type !== "INITIALIZE_DECK"
