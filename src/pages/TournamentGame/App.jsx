@@ -36,9 +36,9 @@ function App() {
   // ... existing state
   const [userCards, opponentCards, stateHasBeenInitialized] =
     useSelector((state) => [
-      state.userCards,
-      state.opponentCards,
-      state.stateHasBeenInitialized,
+      state.userCards || [],
+      state.opponentCards || [],
+      state.stateHasBeenInitialized || false,
     ]);
 
   const dispatch = useDispatch();
