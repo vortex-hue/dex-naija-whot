@@ -21,11 +21,11 @@ function GameOver({ isTournament, tournamentData, currentMatchId }) {
   // Determine if tournament is won overall
   const isTournamentWin = isTournament && isUserWinner && isFinalMatch;
 
-  const title = isUserWinner ? (isTournamentWin ? "TOURNAMENT CHAMPION! 🏆" : "YOU WIN") : "YOU LOST😔";
+  const title = isUserWinner ? (isTournamentWin ? "TOURNAMENT CHAMPION! 🏆🇳🇬" : "YOU WIN 🏆🇳🇬") : "YOU LOST THIS TOURNAMENT 😔";
 
   const subtitle = isUserWinner
     ? (isTournamentWin
-      ? `Congrats for winning tournament "${tournamentData?.name || ''}", you were indeed exceptional!`
+      ? `Congrats for winning tournament 🏆🇳🇬 "${tournamentData?.name || ''}", you were indeed exceptional!`
       : "Congrats! You won this round.")
     : "Sorry, just try again.";
 
