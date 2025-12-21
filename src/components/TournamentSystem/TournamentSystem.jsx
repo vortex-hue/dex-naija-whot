@@ -30,6 +30,7 @@ const TournamentSystem = () => {
 
         // Socket listeners
         socket.on('tournaments_list', (data) => {
+            if (!Array.isArray(data)) return;
             setTournaments(data);
             if (activeTournament) {
                 const updated = data.find(t => t.id === activeTournament.id);
@@ -91,14 +92,17 @@ const TournamentSystem = () => {
     };
 
     const renderBracket = (tournament) => {
-        if (!tournament) return null;
+        if (!tournament || !tournament.matches) return null;
 
         const rounds = [];
-        let matches = tournament.matches;
-        const totalRounds = Math.log2(tournament.size);
+        const matches = tournament.matches || [];
+        const size = parseInt(tournament.size);
+        if (!size || size <= 0) return null;
+
+        const totalRounds = Math.log2(size);
 
         for (let i = 1; i <= totalRounds; i++) {
-            const roundMatches = matches.filter(m => m.round === i);
+            const roundMatches = matches.filter(m => m && m.round === i);
             rounds.push(
                 <motion.div
                     key={i}
@@ -110,16 +114,16 @@ const TournamentSystem = () => {
                     <h4>Round {i}</h4>
                     {roundMatches.map(m => (
                         <motion.div
-                            key={m.id}
+                            key={m.id || Math.random()}
                             className="bracket-match"
                             whileHover={{ scale: 1.02 }}
                         >
-                            <div className={`player ${m.winner?.name === m.p1?.name ? 'winner' : ''}`}>
-                                {m.p1 ? m.p1.name : 'Waiting...'}
+                            <div className={`player ${m.winner?.name && m.p1?.name && m.winner.name === m.p1.name ? 'winner' : ''}`}>
+                                {m.p1?.name ? m.p1.name : 'Waiting...'}
                             </div>
                             <div className="vs">vs</div>
-                            <div className={`player ${m.winner?.name === m.p2?.name ? 'winner' : ''}`}>
-                                {m.p2 ? m.p2.name : 'Waiting...'}
+                            <div className={`player ${m.winner?.name && m.p2?.name && m.winner.name === m.p2.name ? 'winner' : ''}`}>
+                                {m.p2?.name ? m.p2.name : 'Waiting...'}
                             </div>
                         </motion.div>
                     ))}
@@ -277,7 +281,14 @@ const TournamentSystem = () => {
                                                 Join
                                             </motion.button>
                                         )}
-                                        {t.status !== 'waiting' && <button onClick={() => setActiveTournament(t)} className="view-btn">View</button>}
+                                        {t.status !== 'waiting' && (
+                                            <button
+                                                onClick={() => setActiveTournament(t)}
+                                                className={t.participants?.includes(userStoredId) ? "re-entry-btn" : "view-btn"}
+                                            >
+                                                {t.participants?.includes(userStoredId) ? "RE-ENTER" : "View"}
+                                            </button>
+                                        )}
                                     </motion.div>
                                 ))}
                             </div>

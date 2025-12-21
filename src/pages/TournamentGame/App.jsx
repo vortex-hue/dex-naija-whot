@@ -146,7 +146,7 @@ function App() {
   }
 
   return (
-    <Flipper flipKey={[...userCards, ...opponentCards]}>
+    <Flipper flipKey={[...(userCards || []), ...(opponentCards || [])]}>
       <div className="App tournament-mode">
         <div className="tournament-header-badge">🏆 TOURNAMENT MATCH</div>
         <MissionPanel />

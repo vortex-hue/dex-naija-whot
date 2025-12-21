@@ -6,6 +6,7 @@ import socket from "../socket/socket";
 
 const enhancedReducer = (state, action) => {
   if (action.type === "INITIALIZE_DECK") {
+    if (!action.payload || typeof action.payload !== 'object') return state;
     return action.payload;
   }
 

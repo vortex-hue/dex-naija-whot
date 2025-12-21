@@ -140,6 +140,22 @@
     cursor: pointer;
 }
 
+.re-entry-btn {
+    background: linear-gradient(135deg, #FFD700 0%, #F1F514 100%);
+    color: black;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.re-entry-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
 .winner-text {
     color: #FFD700;
     font-weight: bold;
