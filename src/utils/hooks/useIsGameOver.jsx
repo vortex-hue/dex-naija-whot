@@ -1,10 +1,11 @@
 import { useSelector } from "react-redux";
+import { useCallback } from "react";
 
 function useIsGameOver() {
   const userCards = useSelector((state) => state.userCards || []);
   const opponentCards = useSelector((state) => state.opponentCards || []);
 
-  const isGameOver = () => {
+  const isGameOver = useCallback(() => {
     let answer = false;
     let winner = null;
     if (userCards.length === 0) {
@@ -17,7 +18,7 @@ function useIsGameOver() {
     }
 
     return { answer, winner };
-  };
+  }, [userCards, opponentCards]);
 
   return isGameOver;
 }

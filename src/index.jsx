@@ -7,6 +7,15 @@ import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame } 
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+window.addEventListener('error', (event) => {
+  console.error("🔥 GLOBAL UNCAUGHT ERROR:", event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error("🔥 UNHANDLED PROMISE REJECTION:", event.reason);
+});
+
 root.render(
   <React.StrictMode>
     <ErrorBoundary>
