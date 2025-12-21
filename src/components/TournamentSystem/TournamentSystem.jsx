@@ -293,6 +293,8 @@ const TournamentSystem = () => {
                                             <p>Status: {t.status}</p>
                                             <div className="debug-ids" style={{ fontSize: '0.65rem', color: '#00FF00', background: 'rgba(0,0,0,0.5)', padding: '2px 5px', borderRadius: '4px', margin: '5px 0' }}>
                                                 IDs: {t.participants ? t.participants.join(', ') : (t.pids ? t.pids.join(', ') : 'None')}
+                                                <br />
+                                                <span style={{ fontSize: '0.5rem', opacity: 0.7 }}>Keys: {Object.keys(t).join(', ')}</span>
                                             </div>
                                             {t.status === 'completed' && t.winner && (
                                                 <p className="winner-text">🏆 Winner: {t.winner.name}</p>
