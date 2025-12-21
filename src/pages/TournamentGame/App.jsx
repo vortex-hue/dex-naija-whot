@@ -34,12 +34,9 @@ function App() {
     opponentIsOnline: false,
   });
   // ... existing state
-  const [userCards, opponentCards, stateHasBeenInitialized] =
-    useSelector((state) => [
-      state.userCards || [],
-      state.opponentCards || [],
-      state.stateHasBeenInitialized || false,
-    ]);
+  const userCards = useSelector((state) => state.userCards || []);
+  const opponentCards = useSelector((state) => state.opponentCards || []);
+  const stateHasBeenInitialized = useSelector((state) => state.stateHasBeenInitialized || false);
 
   const dispatch = useDispatch();
 

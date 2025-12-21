@@ -23,14 +23,11 @@ function CardComponent({
   isMarketCard,
 }) {
   const [isShownState, setIsShownState] = useState(isShown);
-  const [whoIsToPlay, activeCard, userCards, usedCards, opponentCards] =
-    useSelector((state) => [
-      state.whoIsToPlay || 'user',
-      state.activeCard || {},
-      state.userCards || [],
-      state.usedCards || [],
-      state.opponentCards || [],
-    ]);
+  const whoIsToPlay = useSelector((state) => state.whoIsToPlay || 'user');
+  const activeCard = useSelector((state) => state.activeCard || {});
+  const userCards = useSelector((state) => state.userCards || []);
+  const usedCards = useSelector((state) => state.usedCards || []);
+  const opponentCards = useSelector((state) => state.opponentCards || []);
   const dispatch = useDispatch();
   const { market } = useMarket();
   const isGameOver = useIsGameOver();

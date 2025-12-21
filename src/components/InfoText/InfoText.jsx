@@ -3,10 +3,8 @@ import style from "./index.module.css";
 import { useSelector } from "react-redux";
 
 function InfoText() {
-  const [infoText, infoShown] = useSelector((state) => [
-    state.infoText || "",
-    state.infoShown || false,
-  ]);
+  const infoText = useSelector((state) => state.infoText || "");
+  const infoShown = useSelector((state) => state.infoShown || false);
   return (
     <p className={`${style.text} ${!infoShown && style.hidden}`}>{infoText}</p>
   );
