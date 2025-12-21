@@ -70,11 +70,17 @@ function CardComponent({
     }, delay);
   }, [activeCard, userCards, opponentCards, isPlayed, isGameOver, playOpponentCard, delay]);
 
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleClick = () => {
+    if (isProcessing) return;
+
     if (isMarketCard && whoIsToPlay === "user") {
+      setIsProcessing(true);
       goToMarket("user", marketConfig, 1);
       dispatch(setWhoIsToPlay("opponent"));
       dispatch(setInfoText(infoTextValues.computersTurn));
+      setTimeout(() => setIsProcessing(false), 500);
       return;
     }
 
@@ -84,7 +90,9 @@ function CardComponent({
       whoIsToPlay === "user" &&
       (number === activeCard.number || shape === activeCard.shape)
     ) {
+      setIsProcessing(true);
       playUserCard();
+      setTimeout(() => setIsProcessing(false), 500);
     }
   };
 
