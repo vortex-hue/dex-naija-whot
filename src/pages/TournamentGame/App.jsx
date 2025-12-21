@@ -142,8 +142,12 @@ function App() {
     return <ConnectionLoader />;
   }
 
+  // Create a stable key for Flipper that only changes when cards actually change
+  const flipKey = (userCards || []).map(c => `${c.shape}-${c.number}`).join('') +
+    (opponentCards || []).map(c => `${c.shape}-${c.number}`).join('');
+
   return (
-    <Flipper flipKey={[...(userCards || []), ...(opponentCards || [])]}>
+    <Flipper flipKey={flipKey}>
       <div className="App tournament-mode">
         <div className="tournament-header-badge">🏆 TOURNAMENT MATCH</div>
         <MissionPanel />
