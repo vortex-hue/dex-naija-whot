@@ -7,25 +7,34 @@ import socket from "../socket/socket";
 export const sanitizeState = (state) => {
   if (!state || typeof state !== 'object') return state;
 
+  let hasChanged = false;
   const sanitized = { ...state };
   const cardArrays = ['userCards', 'opponentCards', 'deck', 'usedCards'];
 
   cardArrays.forEach(key => {
-    if (Array.isArray(sanitized[key])) {
-      // Remove any null, undefined or non-object cards to prevent crashes
-      sanitized[key] = sanitized[key].filter(card =>
+    const originalArray = state[key];
+    if (Array.isArray(originalArray)) {
+      const filtered = originalArray.filter(card =>
         card && typeof card === 'object' && card.shape && card.number
       );
-    } else if (sanitized[key] === undefined || sanitized[key] === null) {
+
+      // Only update if filter actually removed something
+      if (filtered.length !== originalArray.length) {
+        sanitized[key] = filtered;
+        hasChanged = true;
+      }
+    } else if (originalArray === undefined || originalArray === null) {
       sanitized[key] = [];
+      hasChanged = true;
     }
   });
 
-  if (!sanitized.activeCard || typeof sanitized.activeCard !== 'object') {
+  if (!state.activeCard || typeof state.activeCard !== 'object') {
     sanitized.activeCard = {};
+    hasChanged = true;
   }
 
-  return sanitized;
+  return hasChanged ? sanitized : state;
 };
 
 const enhancedReducer = (state, action) => {

@@ -24,7 +24,7 @@ function useMarket() {
       // Refresh market
       dispatch(refreshUsedCards([...userCards, ...opponentCards, activeCard]));
     }
-  }, [market.length, userCards, opponentCards, activeCard, dispatch]);
+  }, [market.length, dispatch]);
 
   return { market };
 }
