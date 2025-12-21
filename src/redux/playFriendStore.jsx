@@ -4,17 +4,40 @@ import socket from "../socket/socket";
 
 
 
+export const sanitizeState = (state) => {
+  if (!state || typeof state !== 'object') return state;
+
+  const sanitized = { ...state };
+  const cardArrays = ['userCards', 'opponentCards', 'deck', 'usedCards'];
+
+  cardArrays.forEach(key => {
+    if (Array.isArray(sanitized[key])) {
+      // Remove any null, undefined or non-object cards to prevent crashes
+      sanitized[key] = sanitized[key].filter(card =>
+        card && typeof card === 'object' && card.shape && card.number
+      );
+    } else if (sanitized[key] === undefined || sanitized[key] === null) {
+      sanitized[key] = [];
+    }
+  });
+
+  if (!sanitized.activeCard || typeof sanitized.activeCard !== 'object') {
+    sanitized.activeCard = {};
+  }
+
+  return sanitized;
+};
+
 const enhancedReducer = (state, action) => {
   try {
+    let result;
     if (action.type === "INITIALIZE_DECK") {
       if (!action.payload || typeof action.payload !== 'object') {
         console.warn("Redux: Invalid INITIALIZE_DECK payload", action.payload);
         return state;
       }
-      return action.payload;
-    }
-
-    if (action.type === "UPDATE_STATE") {
+      result = action.payload;
+    } else if (action.type === "UPDATE_STATE") {
       if (!action.payload) {
         console.warn("Redux: Missing payload for UPDATE_STATE");
         return state;
@@ -26,13 +49,16 @@ const enhancedReducer = (state, action) => {
       }
       let newState = state.player === "one" ? playerOneState : playerTwoState;
       // Preserve local UI state that server doesn't know about
-      return { ...newState, infoShown: state.infoShown || false };
+      result = { ...newState, infoShown: state.infoShown || false };
+    } else {
+      result = combinedReducer(state, action);
     }
 
-    return combinedReducer(state, action);
+    return sanitizeState(result);
   } catch (error) {
-    console.error("Redux Reducer Crash:", error, action);
-    return state; // Return previous state on crash to prevent white screen
+    console.error("Redux Reducer Crash Fix Applied:", error, action);
+    // Attempt rescue with sanitized previous state
+    return sanitizeState(state);
   }
 };
 

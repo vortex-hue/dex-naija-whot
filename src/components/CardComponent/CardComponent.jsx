@@ -88,7 +88,7 @@ function CardComponent({
 
     if (
       whoIsToPlay === "user" &&
-      (number === activeCard.number || shape === activeCard.shape)
+      (number === activeCard?.number || shape === activeCard?.shape)
     ) {
       setIsProcessing(true);
       playUserCard();

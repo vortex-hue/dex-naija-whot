@@ -11,11 +11,11 @@ function useMarket() {
 
   const dispatch = useDispatch();
 
-  const market = deck.filter(
+  const market = (deck || []).filter(Boolean).filter(
     (card) =>
-      !usedCards.some(
+      !(usedCards || []).filter(Boolean).some(
         (usedCard) =>
-          usedCard.shape === card.shape && usedCard.number === card.number
+          usedCard?.shape === card?.shape && usedCard?.number === card?.number
       )
   );
 

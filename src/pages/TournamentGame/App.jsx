@@ -163,8 +163,8 @@ function App() {
   }
 
   // Create a stable key for Flipper that only changes when cards actually change
-  const flipKey = (userCards || []).map(c => `${c.shape}-${c.number}`).join('') +
-    (opponentCards || []).map(c => `${c.shape}-${c.number}`).join('');
+  const flipKey = (userCards || []).filter(Boolean).map(c => `${c?.shape || 'none'}-${c?.number || '0'}`).join('') +
+    (opponentCards || []).filter(Boolean).map(c => `${c?.shape || 'none'}-${c?.number || '0'}`).join('');
 
   return (
     <Flipper flipKey={flipKey}>

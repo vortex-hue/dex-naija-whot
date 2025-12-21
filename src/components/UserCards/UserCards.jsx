@@ -9,7 +9,7 @@ function UserCards() {
   return (
     <div className="scroll-container">
       <div className="grid">
-        {(userCards || []).map((card) => (
+        {(userCards || []).filter(Boolean).map((card) => (
           <CardComponent
             shape={card.shape}
             number={card.number}
