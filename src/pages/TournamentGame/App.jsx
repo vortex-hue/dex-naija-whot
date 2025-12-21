@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     let storedId = localStorage.getItem("storedId");
-    if (!storedId) {
+    if (!storedId || storedId === 'none' || storedId === 'null' || storedId === 'undefined') {
       storedId = generateRandomCode(10);
       localStorage.setItem("storedId", storedId);
     }
