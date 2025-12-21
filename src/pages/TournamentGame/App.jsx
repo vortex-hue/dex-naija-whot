@@ -96,22 +96,8 @@ function App() {
 
     const handleMatchOver = ({ winnerStoredId }) => {
       console.log("🏁 Match officially over. Winner:", winnerStoredId);
-      const myId = localStorage.getItem("storedId");
-      if (winnerStoredId !== myId) {
-        // I am the loser. I need to know the opponent won.
-        // Force the reducer to show opponent has 0 cards
-        dispatch({
-          type: "UPDATE_STATE",
-          payload: {
-            playerOneState: { opponentCards: [] }, // This will be merged/overwritten but we need a specific sync
-            playerTwoState: { opponentCards: [] }
-          }
-        });
-        // A better way: directly dispatch to the specific reducer if possible, 
-        // but UPDATE_STATE is our primary sync tool.
-        // Let's just set a local 'remoteGameOver' state to be safe.
-        setRemoteGameOver(winnerStoredId);
-      }
+      // ALWAYS set remoteGameOver for both players to ensure server-side truth
+      setRemoteGameOver(winnerStoredId);
     };
 
     const handleTimerUpdate = ({ timeLeft: seconds }) => {
@@ -181,10 +167,11 @@ function App() {
     if (gameOverState.answer && stateHasBeenInitialized) {
       let storedId = localStorage.getItem("storedId");
 
-      // Emit specific tournament win event
+      // Emit specific tournament win event with server-resolvable fields
       socket.emit("tournament_match_win", {
         room_id,
-        winnerStoredId: gameOverState.winner === 'user' ? storedId : 'opponent_id_placeholder',
+        winnerType: gameOverState.winner, // 'user' or 'opponent'
+        reporterStoredId: storedId,
         tournamentId,
         matchId
       });

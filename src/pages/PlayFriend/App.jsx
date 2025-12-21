@@ -132,16 +132,12 @@ function App() {
     const gameOverState = isGameOver();
     if (gameOverState.answer && stateHasBeenInitialized) {
       let storedId = localStorage.getItem("storedId");
-      // If I am the winner, I can claim it. Or we just send the winner 'user' or 'opponent'
-      // Ideally we send the storedId of the winner.
-      // If winner is 'user', storedId is mine.
-      // If winner is 'opponent', we don't know their storedId easily without looking at state, 
-      // but simpler: just say "I lost" or "I won".
-
-      // Actually, let's just send the raw info and let backend decide.
-      // But purely client-side logic is risky. 
-      // Let's send { room_id, winner: gameOverState.winner, reporterStoredId: storedId }
-      socket.emit("game_over", { room_id, winner: gameOverState.winner, reporterStoredId: storedId });
+      // Report game over with winner type and reporter ID for server-side resolution
+      socket.emit("game_over", {
+        room_id,
+        winner: gameOverState.winner, // 'user' or 'opponent'
+        reporterStoredId: storedId
+      });
     }
   }, [isGameOver, room_id, stateHasBeenInitialized]);
 
