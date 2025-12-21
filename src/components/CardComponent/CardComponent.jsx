@@ -34,18 +34,20 @@ function CardComponent({
 
   const location = useLocation();
 
-  if (location.pathname.includes("play-friend")) {
-    infoTextValues.computersTurn =
-      "It's your opponent's turn to make a move now";
-  }
+  useEffect(() => {
+    if (location.pathname.includes("play-friend")) {
+      infoTextValues.computersTurn =
+        "It's your opponent's turn to make a move now";
+    }
+  }, [location.pathname]);
 
-  const marketConfig = {
+  const marketConfig = React.useMemo(() => ({
     market,
     dispatch,
     usedCards,
     userCards,
     opponentCards,
-  };
+  }), [market, dispatch, usedCards, userCards, opponentCards]);
 
   let delay = 500;
 

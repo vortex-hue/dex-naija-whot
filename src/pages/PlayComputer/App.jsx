@@ -16,11 +16,9 @@ import { useSelector } from "react-redux";
 import "../../index.css";
 
 function App() {
-  const [activeCard, userCards, opponentCards] = useSelector((state) => [
-    state.activeCard,
-    state.userCards,
-    state.opponentCards,
-  ]);
+  const activeCard = useSelector((state) => state.activeCard || {});
+  const userCards = useSelector((state) => state.userCards || []);
+  const opponentCards = useSelector((state) => state.opponentCards || []);
 
 
 

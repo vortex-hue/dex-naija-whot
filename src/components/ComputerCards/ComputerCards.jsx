@@ -9,14 +9,11 @@ import { setInfoText, setWhoIsToPlay } from "../../redux/actions";
 import infoTextValues from "../../constants/infoTextValues";
 
 function ComputerCards() {
-  const [opponentCards, whoIsToPlay, activeCard, usedCards, userCards] =
-    useSelector((state) => [
-      state.opponentCards,
-      state.whoIsToPlay,
-      state.activeCard,
-      state.usedCards,
-      state.userCards,
-    ]);
+  const opponentCards = useSelector((state) => state.opponentCards || []);
+  const whoIsToPlay = useSelector((state) => state.whoIsToPlay || "user");
+  const activeCard = useSelector((state) => state.activeCard || {});
+  const usedCards = useSelector((state) => state.usedCards || []);
+  const userCards = useSelector((state) => state.userCards || []);
 
   const dispatch = useDispatch();
   const { market } = useMarket();

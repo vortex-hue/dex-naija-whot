@@ -8,6 +8,7 @@ import {
 } from "../../redux/actions";
 import infoTextValues from "../../constants/infoTextValues";
 import { useLocation } from "react-router-dom";
+import { useCallback, useEffect, useMemo } from "react";
 
 
 function usePlayCardFunctions({
@@ -20,15 +21,17 @@ function usePlayCardFunctions({
 }) {
   const location = useLocation();
 
-  if (location.pathname.includes("play-friend")) {
-    infoTextValues.computersTurn =
-      "It's your opponent's turn to make a move now";
-  }
+  useEffect(() => {
+    if (location.pathname.includes("play-friend")) {
+      infoTextValues.computersTurn =
+        "It's your opponent's turn to make a move now";
+    }
+  }, [location.pathname]);
 
   const dispatch = useDispatch();
 
 
-  const playUserCard = () => {
+  const playUserCard = useCallback(() => {
     dispatch(removeUserCard({ shape, number }));
     dispatch(updateActiveCard({ shape, number }));
 
@@ -61,9 +64,9 @@ function usePlayCardFunctions({
 
     dispatch(setWhoIsToPlay("opponent"));
     dispatch(setInfoText(infoTextValues.computersTurn));
-  };
+  }, [shape, number, dispatch, goToMarket, marketConfig]);
 
-  const playOpponentCard = () => {
+  const playOpponentCard = useCallback(() => {
     setIsShownState(true);
     setTimeout(() => {
       dispatch(removeOpponentCard({ shape, number }));
@@ -96,9 +99,9 @@ function usePlayCardFunctions({
       dispatch(setWhoIsToPlay("user"));
       dispatch(setInfoText(infoTextValues.usersTurn));
     }, delay);
-  };
+  }, [shape, number, dispatch, goToMarket, marketConfig, setIsShownState, delay]);
 
-  return [playUserCard, playOpponentCard];
+  return useMemo(() => [playUserCard, playOpponentCard], [playUserCard, playOpponentCard]);
 }
 
 export default usePlayCardFunctions;

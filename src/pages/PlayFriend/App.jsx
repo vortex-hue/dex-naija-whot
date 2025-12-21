@@ -34,12 +34,9 @@ function App() {
 
 
 
-  const [userCards, opponentCards, stateHasBeenInitialized] =
-    useSelector((state) => [
-      state.userCards,
-      state.opponentCards,
-      state.stateHasBeenInitialized,
-    ]);
+  const userCards = useSelector((state) => state.userCards || []);
+  const opponentCards = useSelector((state) => state.opponentCards || []);
+  const stateHasBeenInitialized = useSelector((state) => state.stateHasBeenInitialized || false);
 
   const dispatch = useDispatch();
 
@@ -121,8 +118,11 @@ function App() {
     return <ConnectionLoader />;
   }
 
+  const flipKey = (userCards || []).map(c => `${c.shape}-${c.number}`).join('') +
+    (opponentCards || []).map(c => `${c.shape}-${c.number}`).join('');
+
   return (
-    <Flipper flipKey={[...userCards, ...opponentCards]}>
+    <Flipper flipKey={flipKey}>
       <div className="App">
 
         <MissionPanel />
@@ -132,7 +132,6 @@ function App() {
         <UserCards />
         <InfoArea />
         <GameOver />
-        <Preloader />
         <Preloader />
         <OnlineIndicators onlineState={onlineState} />
         {room_id && <Chat roomId={room_id} storedId={localStorage.getItem("storedId")} />}
