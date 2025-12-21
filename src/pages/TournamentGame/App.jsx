@@ -132,7 +132,7 @@ function App() {
 
       const timer = setTimeout(() => {
         // Redirect back to main tournament page
-        window.location.href = '/';
+        window.location.href = '/tournaments';
       }, 5000); // 5 seconds to see celebration
 
       return () => clearTimeout(timer);

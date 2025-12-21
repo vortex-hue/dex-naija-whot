@@ -338,7 +338,7 @@ const TournamentSystem = () => {
 
                     {/* Action Area for Active Players */}
                     {(() => {
-                        const myMatch = activeTournament.matches.find(m =>
+                        const myMatch = activeTournament.matches?.find(m =>
                             m.round === activeTournament.currentRound &&
                             !m.winner &&
                             ((m.p1 && m.p1.storedId === userStoredId) || (m.p2 && m.p2.storedId === userStoredId))
