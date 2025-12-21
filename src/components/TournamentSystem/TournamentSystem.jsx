@@ -275,9 +275,9 @@ const TournamentSystem = () => {
                                         if (m.p2?.storedId) matchParticipants.add(m.p2.storedId);
                                     });
 
-                                    const isParticipant = t.participants?.includes(userStoredId) || matchParticipants.has(userStoredId);
+                                    const isParticipant = (t.participants || t.pids || []).includes(userStoredId) || matchParticipants.has(userStoredId);
 
-                                    if (index === 0) console.log(`DEBUG: Tournament ${t.id} participants:`, t.participants, "Match Based IDs:", Array.from(matchParticipants));
+                                    if (index === 0) console.log(`DEBUG: Tournament ${t.id} - User: ${userStoredId} | Participants:`, t.participants || t.pids, "Match Based IDs:", Array.from(matchParticipants));
 
                                     return (
                                         <motion.div
@@ -289,10 +289,10 @@ const TournamentSystem = () => {
                                             whileHover={{ y: -5 }}
                                         >
                                             <h4>{t.name}</h4>
-                                            <p>Players: {t.pcount || 0} / {t.size}</p>
+                                            <p>Players: {t.playersCount || 0} / {t.size}</p>
                                             <p>Status: {t.status}</p>
                                             <div className="debug-ids" style={{ fontSize: '0.65rem', color: '#00FF00', background: 'rgba(0,0,0,0.5)', padding: '2px 5px', borderRadius: '4px', margin: '5px 0' }}>
-                                                PIDs: {t.pids ? t.pids.join(', ') : 'MISSING_PROPERTY'}
+                                                IDs: {t.participants ? t.participants.join(', ') : (t.pids ? t.pids.join(', ') : 'None')}
                                             </div>
                                             {t.status === 'completed' && t.winner && (
                                                 <p className="winner-text">🏆 Winner: {t.winner.name}</p>
