@@ -14,7 +14,7 @@ const TournamentSystem = () => {
     const [activeTournament, setActiveTournament] = useState(null);
     const [userStoredId] = useState(() => {
         let stored = localStorage.getItem('storedId');
-        if (!stored) {
+        if (!stored || stored === 'none' || stored === 'None') {
             stored = generateRandomCode(10);
             localStorage.setItem('storedId', stored);
         }
@@ -33,6 +33,7 @@ const TournamentSystem = () => {
 
         // Socket listeners
         socket.on('tournaments_list', (data) => {
+            console.log("RAW SOCKET DATA (tournaments_list):", data);
             if (!Array.isArray(data)) return;
             setTournaments(data);
             if (activeTournament) {
@@ -288,10 +289,10 @@ const TournamentSystem = () => {
                                             whileHover={{ y: -5 }}
                                         >
                                             <h4>{t.name}</h4>
-                                            <p>Players: {t.playersCount} / {t.size}</p>
+                                            <p>Players: {t.pcount || 0} / {t.size}</p>
                                             <p>Status: {t.status}</p>
-                                            <div className="debug-ids" style={{ fontSize: '0.6rem', opacity: 0.5, marginBottom: '5px' }}>
-                                                IDs: {t.participants?.join(', ') || 'None'}
+                                            <div className="debug-ids" style={{ fontSize: '0.65rem', color: '#00FF00', background: 'rgba(0,0,0,0.5)', padding: '2px 5px', borderRadius: '4px', margin: '5px 0' }}>
+                                                PIDs: {t.pids ? t.pids.join(', ') : 'MISSING_PROPERTY'}
                                             </div>
                                             {t.status === 'completed' && t.winner && (
                                                 <p className="winner-text">🏆 Winner: {t.winner.name}</p>
