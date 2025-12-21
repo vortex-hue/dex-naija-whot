@@ -33,6 +33,7 @@ function App() {
     userIsOnline: false,
     opponentIsOnline: false,
   });
+  const [remoteGameOver, setRemoteGameOver] = useState(null);
   // ... existing state
   const userCards = useSelector((state) => state.userCards || []);
   const opponentCards = useSelector((state) => state.opponentCards || []);
@@ -91,6 +92,26 @@ function App() {
       socket.emit("get_tournaments"); // Fetch current status
     }
 
+    const handleMatchOver = ({ winnerStoredId }) => {
+      console.log("🏁 Match officially over. Winner:", winnerStoredId);
+      const myId = localStorage.getItem("storedId");
+      if (winnerStoredId !== myId) {
+        // I am the loser. I need to know the opponent won.
+        // Force the reducer to show opponent has 0 cards
+        dispatch({
+          type: "UPDATE_STATE",
+          payload: {
+            playerOneState: { opponentCards: [] }, // This will be merged/overwritten but we need a specific sync
+            playerTwoState: { opponentCards: [] }
+          }
+        });
+        // A better way: directly dispatch to the specific reducer if possible, 
+        // but UPDATE_STATE is our primary sync tool.
+        // Let's just set a local 'remoteGameOver' state to be safe.
+        setRemoteGameOver(winnerStoredId);
+      }
+    };
+
     socket.on("dispatch", handleDispatch);
     socket.on("error", handleError);
     socket.on("disconnect", handleDisconnect);
@@ -98,6 +119,7 @@ function App() {
     socket.on("opponentOnlineStateChanged", handleOpponentOnlineState);
     socket.on("confirmOnlineState", handleConfirmOnlineState);
     socket.on("tournament_update", handleTournamentUpdate);
+    socket.on("match_over", handleMatchOver);
     socket.on("tournaments_list", (list) => {
       const found = list.find(t => t.id === tournamentId);
       if (found) setActiveTournament(found);
@@ -111,6 +133,7 @@ function App() {
       socket.off("opponentOnlineStateChanged", handleOpponentOnlineState);
       socket.off("confirmOnlineState", handleConfirmOnlineState);
       socket.off("tournament_update", handleTournamentUpdate);
+      socket.off("match_over", handleMatchOver);
       socket.off("tournaments_list");
     };
   }, [dispatch, room_id, isTournament, matchId, tournamentId]);
@@ -176,7 +199,7 @@ function App() {
         <CenterArea />
         <UserCards />
         <InfoArea />
-        <GameOver isTournament={true} tournamentData={activeTournament} currentMatchId={matchId} />
+        <GameOver isTournament={true} tournamentData={activeTournament} currentMatchId={matchId} remoteGameOver={remoteGameOver} />
         <Preloader />
         <OnlineIndicators onlineState={onlineState} />
         {room_id && <Chat roomId={room_id} storedId={localStorage.getItem("storedId")} />}

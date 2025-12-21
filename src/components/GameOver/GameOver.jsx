@@ -6,11 +6,17 @@ import confettiAnimation from "../../utils/functions/confettiAnimation";
 import { useEffect, useState } from "react";
 
 
-function GameOver({ isTournament, tournamentData, currentMatchId }) {
-  const isGameOver = useIsGameOver();
+function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver }) {
+  const isGameOverHook = useIsGameOver();
   const [animationHasRun, setAnimationHasRun] = useState(false);
 
-  const gameOverState = isGameOver();
+  const localGameOver = isGameOverHook();
+
+  // Create final state: follow server signal if present, otherwise follow local cards
+  const gameOverState = remoteGameOver
+    ? { answer: true, winner: remoteGameOver === localStorage.getItem("storedId") ? "user" : "opponent" }
+    : localGameOver;
+
   const isUserWinner = gameOverState.winner === "user";
 
   // Detect if this is the final round

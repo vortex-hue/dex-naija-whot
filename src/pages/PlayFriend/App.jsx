@@ -31,6 +31,7 @@ function App() {
     userIsOnline: false,
     opponentIsOnline: false,
   });
+  const [remoteGameOver, setRemoteGameOver] = useState(null);
 
 
 
@@ -77,6 +78,11 @@ function App() {
       socket.emit("confirmOnlineState", storedId, room_id);
     };
 
+    const handleMatchOver = ({ winnerStoredId }) => {
+      console.log("🏁 Match officially over. Winner:", winnerStoredId);
+      setRemoteGameOver(winnerStoredId);
+    };
+
     socket.emit("join_room", { room_id, storedId });
     socket.on("dispatch", handleDispatch);
     socket.on("error", handleError);
@@ -84,6 +90,7 @@ function App() {
     socket.on("connect", handleConnect);
     socket.on("opponentOnlineStateChanged", handleOpponentOnlineState);
     socket.on("confirmOnlineState", handleConfirmOnlineState);
+    socket.on("match_over", handleMatchOver);
 
     return () => {
       socket.off("dispatch", handleDispatch);
@@ -92,6 +99,7 @@ function App() {
       socket.off("connect", handleConnect);
       socket.off("opponentOnlineStateChanged", handleOpponentOnlineState);
       socket.off("confirmOnlineState", handleConfirmOnlineState);
+      socket.off("match_over", handleMatchOver);
     };
   }, [dispatch, room_id]);
 
@@ -131,7 +139,7 @@ function App() {
         <CenterArea />
         <UserCards />
         <InfoArea />
-        <GameOver />
+        <GameOver remoteGameOver={remoteGameOver} />
         <Preloader />
         <OnlineIndicators onlineState={onlineState} />
         {room_id && <Chat roomId={room_id} storedId={localStorage.getItem("storedId")} />}
