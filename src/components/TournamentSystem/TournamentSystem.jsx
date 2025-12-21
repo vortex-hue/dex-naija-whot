@@ -236,6 +236,9 @@ const TournamentSystem = () => {
             {!activeTournament ? (
                 // ... Lobby ... 
                 <div className="tournament-lobby">
+                    <div className="lobby-header-info">
+                        <span className="player-id-badge">My ID: {userStoredId}</span>
+                    </div>
                     <motion.div
                         className="create-actions"
                         initial={{ opacity: 0 }}
@@ -256,41 +259,49 @@ const TournamentSystem = () => {
                             <p className="no-data">No active tournaments. Create one!</p>
                         ) : (
                             <div className="list-grid">
-                                {tournaments.map((t, index) => (
-                                    <motion.div
-                                        key={t.id}
-                                        className="tournament-card"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        whileHover={{ y: -5 }}
-                                    >
-                                        <h4>{t.name}</h4>
-                                        <p>Players: {t.playersCount} / {t.size}</p>
-                                        <p>Status: {t.status}</p>
-                                        {t.status === 'completed' && t.winner && (
-                                            <p className="winner-text">🏆 Winner: {t.winner.name}</p>
-                                        )}
-                                        {t.status === 'waiting' && (
-                                            <motion.button
-                                                onClick={() => joinTournament(t.id)}
-                                                className="join-btn"
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95 }}
-                                            >
-                                                Join
-                                            </motion.button>
-                                        )}
-                                        {t.status !== 'waiting' && (
-                                            <button
-                                                onClick={() => setActiveTournament(t)}
-                                                className={t.participants?.includes(userStoredId) ? "re-entry-btn" : "view-btn"}
-                                            >
-                                                {t.participants?.includes(userStoredId) ? "RE-ENTER" : "View"}
-                                            </button>
-                                        )}
-                                    </motion.div>
-                                ))}
+                                {tournaments.map((t, index) => {
+                                    const isParticipant = t.participants?.includes(userStoredId);
+                                    return (
+                                        <motion.div
+                                            key={t.id}
+                                            className="tournament-card"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            whileHover={{ y: -5 }}
+                                        >
+                                            <h4>{t.name}</h4>
+                                            <p>Players: {t.playersCount} / {t.size}</p>
+                                            <p>Status: {t.status}</p>
+                                            {t.status === 'completed' && t.winner && (
+                                                <p className="winner-text">🏆 Winner: {t.winner.name}</p>
+                                            )}
+                                            {t.status === 'waiting' && (
+                                                <motion.button
+                                                    onClick={() => joinTournament(t.id)}
+                                                    className="join-btn"
+                                                    whileHover={{ scale: 1.05 }}
+                                                    whileTap={{ scale: 0.95 }}
+                                                >
+                                                    Join
+                                                </motion.button>
+                                            )}
+                                            {t.status !== 'waiting' && (
+                                                <button
+                                                    onClick={() => {
+                                                        if (isParticipant) {
+                                                            socket.emit('reconnect_tournament', { tournamentId: t.id, storedId: userStoredId });
+                                                        }
+                                                        setActiveTournament(t);
+                                                    }}
+                                                    className={isParticipant ? "re-entry-btn" : "view-btn"}
+                                                >
+                                                    {isParticipant ? "RE-ENTER" : "View"}
+                                                </button>
+                                            )}
+                                        </motion.div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
