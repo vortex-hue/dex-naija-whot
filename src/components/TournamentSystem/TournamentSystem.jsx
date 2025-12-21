@@ -119,7 +119,7 @@ const TournamentSystem = () => {
                     <h4>Round {i}</h4>
                     {roundMatches.map(m => (
                         <motion.div
-                            key={m.id || Math.random()}
+                            key={m.id || `match-${i}-${index}`}
                             className="bracket-match"
                             whileHover={{ scale: 1.02 }}
                         >
