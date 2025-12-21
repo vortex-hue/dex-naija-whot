@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import CardNumber from "../CardNumber/CardNumber";
 
 function UserCards() {
-  const [userCards] = useSelector((state) => [state.userCards]);
+  const userCards = useSelector((state) => state.userCards);
 
   return (
     <div className="scroll-container">

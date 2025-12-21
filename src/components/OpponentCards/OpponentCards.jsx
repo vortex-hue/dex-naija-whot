@@ -3,7 +3,7 @@ import CardComponent from "../CardComponent/CardComponent";
 import { useSelector } from "react-redux";
 
 function OpponentCards() {
-  const [opponentCards] = useSelector((state) => [state.opponentCards]);
+  const opponentCards = useSelector((state) => state.opponentCards);
 
   return (
     <div className="scroll-container">
