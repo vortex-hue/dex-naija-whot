@@ -8,8 +8,6 @@ import { generateRandomCode } from '../../utils/functions/generateRandomCode';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
-    console.log("DEBUG: TournamentSystem Render. Current userStoredId:", userStoredId);
-
 
     // State
     const [tournaments, setTournaments] = useState([]);
@@ -22,6 +20,9 @@ const TournamentSystem = () => {
         }
         return stored;
     });
+
+    console.log("DEBUG: TournamentSystem Render. Current userStoredId:", userStoredId);
+
     const [error, setError] = useState('');
     const [statusMessage, setStatusMessage] = useState('');
     const [showCelebration, setShowCelebration] = useState(false);
