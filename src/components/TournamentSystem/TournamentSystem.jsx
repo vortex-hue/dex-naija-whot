@@ -11,7 +11,19 @@ const TournamentSystem = () => {
 
     // State
     const [tournaments, setTournaments] = useState([]);
-    const [activeTournament, setActiveTournament] = useState(null);
+    const [activeTournament, setActiveTournament] = useState(() => {
+        const savedId = localStorage.getItem('activeTournamentId');
+        return savedId ? { id: savedId, status: 'unknown' } : null;
+    });
+
+    useEffect(() => {
+        if (activeTournament?.id) {
+            localStorage.setItem('activeTournamentId', activeTournament.id);
+        } else {
+            localStorage.removeItem('activeTournamentId');
+        }
+    }, [activeTournament]);
+
     const [userStoredId] = useState(() => {
         let stored = localStorage.getItem('storedId');
         if (!stored || stored === 'none' || stored === 'None') {
@@ -48,7 +60,20 @@ const TournamentSystem = () => {
             const currentActive = activeTournamentRef.current;
             if (currentActive) {
                 const updated = data.find(t => t.id === currentActive.id);
-                if (updated) setActiveTournament(updated);
+                if (updated) {
+                    // Trigger celebration if it's newly completed (or just became completed for this mount)
+                    if (updated.status === 'completed' && currentActive.status !== 'completed') {
+                        setStatusMessage(`Tournament Over! Winner: ${updated.winner?.name}`);
+                        setShowCelebration(true);
+                        launchConfetti();
+                    }
+                    setActiveTournament(updated);
+                }
+            } else {
+                // Check if user was in a tournament that they are searching for (e.g. via navigation state or similar)
+                // For now, if any tournament in the list is 'completed' and user is a participant but hasn't seen celebration? 
+                // Hard to track without local state. 
+                // Let's rely on TournamentGame/App.jsx redirect logic for now.
             }
         };
 

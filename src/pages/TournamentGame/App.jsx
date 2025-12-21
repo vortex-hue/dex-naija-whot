@@ -40,6 +40,8 @@ function App() {
 
   const dispatch = useDispatch();
 
+  const [activeTournament, setActiveTournament] = useState(null);
+
   useEffect(() => {
     let storedId = localStorage.getItem("storedId");
     if (!storedId || storedId === 'none' || storedId === 'null' || storedId === 'undefined') {
@@ -77,13 +79,29 @@ function App() {
       socket.emit("confirmOnlineState", storedId, room_id);
     };
 
+    const handleTournamentUpdate = (tournament) => {
+      if (tournament.id === tournamentId) {
+        setActiveTournament(tournament);
+      }
+    };
+
     socket.emit("join_room", { room_id, storedId, isTournament, matchId, tournamentId });
+    if (isTournament && tournamentId) {
+      localStorage.setItem('activeTournamentId', tournamentId);
+      socket.emit("get_tournaments"); // Fetch current status
+    }
+
     socket.on("dispatch", handleDispatch);
     socket.on("error", handleError);
     socket.on("disconnect", handleDisconnect);
     socket.on("connect", handleConnect);
     socket.on("opponentOnlineStateChanged", handleOpponentOnlineState);
     socket.on("confirmOnlineState", handleConfirmOnlineState);
+    socket.on("tournament_update", handleTournamentUpdate);
+    socket.on("tournaments_list", (list) => {
+      const found = list.find(t => t.id === tournamentId);
+      if (found) setActiveTournament(found);
+    });
 
     return () => {
       socket.off("dispatch", handleDispatch);
@@ -92,6 +110,8 @@ function App() {
       socket.off("connect", handleConnect);
       socket.off("opponentOnlineStateChanged", handleOpponentOnlineState);
       socket.off("confirmOnlineState", handleConfirmOnlineState);
+      socket.off("tournament_update", handleTournamentUpdate);
+      socket.off("tournaments_list");
     };
   }, [dispatch, room_id, isTournament, matchId, tournamentId]);
 
@@ -156,7 +176,7 @@ function App() {
         <CenterArea />
         <UserCards />
         <InfoArea />
-        <GameOver isTournament={true} />
+        <GameOver isTournament={true} tournamentData={activeTournament} currentMatchId={matchId} />
         <Preloader />
         <OnlineIndicators onlineState={onlineState} />
         {room_id && <Chat roomId={room_id} storedId={localStorage.getItem("storedId")} />}
