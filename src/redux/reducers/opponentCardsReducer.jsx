@@ -5,8 +5,10 @@ const opponentCardsReducer = (state = [], action) => {
 
   if (action.type === "REMOVE_OPPONENT_CARD") {
     let cardToRemove = action.payload;
+    if (!cardToRemove || !cardToRemove.shape) return state;
     return [...state].filter(
       (card) =>
+        card &&
         !(
           card.shape === cardToRemove.shape &&
           card.number === cardToRemove.number

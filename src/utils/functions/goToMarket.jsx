@@ -14,16 +14,17 @@ const goToMarket = (
     market.filter((card) => !setOfUsedCards.includes(card))
   );
 
-  if (player === "user") {
+  if (card && player === "user") {
     dispatch(addUserCard(card));
-  } else if (player === "opponent") {
+  } else if (card && player === "opponent") {
     dispatch(addOpponentCard(card));
   }
 
-  // CRITICAL FIX: Remove the card from the deck so it can't be picked again
-  dispatch(removeCardFromDeck(card));
-
-  setOfUsedCards.unshift(card);
+  if (card) {
+    // CRITICAL FIX: Remove the card from the deck so it can't be picked again
+    dispatch(removeCardFromDeck(card));
+    setOfUsedCards.unshift(card);
+  }
 
   numberOfMoves++;
   if (numberOfMoves === number) {

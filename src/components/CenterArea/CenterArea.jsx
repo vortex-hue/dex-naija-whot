@@ -9,7 +9,7 @@ function CenterArea() {
   return (
     <div className={style.center_area}>
       <Market />
-      {activeCard && (
+      {activeCard && activeCard.shape && (
         <CardComponent
           shape={activeCard.shape}
           number={activeCard.number}

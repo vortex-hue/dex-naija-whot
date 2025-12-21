@@ -2,7 +2,7 @@ import React from "react";
 import style from "./index.module.css";
 
 function Shape({ shape, isSmall }) {
-  const className = `${style.shape} ${style[shape]} ${isSmall && style.small}`;
+  const className = `${style.shape} ${style[shape || 'default']} ${isSmall && style.small}`;
 
   if (shape === "star") {
     return (
