@@ -9,13 +9,15 @@ function CenterArea() {
   return (
     <div className={style.center_area}>
       <Market />
-      <CardComponent
-        shape={activeCard.shape}
-        number={activeCard.number}
-        isShown={true}
-        isMine={false}
-        isActiveCard={true}
-      />
+      {activeCard && (
+        <CardComponent
+          shape={activeCard.shape}
+          number={activeCard.number}
+          isShown={true}
+          isMine={false}
+          isActiveCard={true}
+        />
+      )}
     </div>
   );
 }
