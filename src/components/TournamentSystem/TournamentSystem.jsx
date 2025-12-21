@@ -8,6 +8,8 @@ import { generateRandomCode } from '../../utils/functions/generateRandomCode';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
+    console.log("DEBUG: TournamentSystem Render. Current userStoredId:", userStoredId);
+
 
     // State
     const [tournaments, setTournaments] = useState([]);
@@ -254,13 +256,26 @@ const TournamentSystem = () => {
                     </motion.div>
 
                     <div className="tournament-list">
-                        <h3>Available Tournaments</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h3>Available Tournaments</h3>
+                            <button onClick={() => socket.emit('get_tournaments')} className="view-btn" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>Manual Refresh</button>
+                        </div>
                         {tournaments.length === 0 ? (
                             <p className="no-data">No active tournaments. Create one!</p>
                         ) : (
                             <div className="list-grid">
                                 {tournaments.map((t, index) => {
-                                    const isParticipant = t.participants?.includes(userStoredId);
+                                    // Fallback: Check matches if participants array is missing or empty
+                                    const matchParticipants = new Set();
+                                    t.matches?.forEach(m => {
+                                        if (m.p1?.storedId) matchParticipants.add(m.p1.storedId);
+                                        if (m.p2?.storedId) matchParticipants.add(m.p2.storedId);
+                                    });
+
+                                    const isParticipant = t.participants?.includes(userStoredId) || matchParticipants.has(userStoredId);
+
+                                    if (index === 0) console.log(`DEBUG: Tournament ${t.id} participants:`, t.participants, "Match Based IDs:", Array.from(matchParticipants));
+
                                     return (
                                         <motion.div
                                             key={t.id}
