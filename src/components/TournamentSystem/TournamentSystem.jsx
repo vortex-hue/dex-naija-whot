@@ -136,7 +136,7 @@ const TournamentSystem = () => {
                     transition={{ delay: i * 0.2 }}
                 >
                     <h4>Round {i}</h4>
-                    {roundMatches.map(m => (
+                    {roundMatches.map((m, index) => (
                         <motion.div
                             key={m.id || `match-${i}-${index}`}
                             className="bracket-match"

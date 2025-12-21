@@ -36,6 +36,9 @@ class BackgroundMusicGenerator {
     if (!this.audioContext) {
       this.init();
     }
+    if (this.audioContext && this.audioContext.state === 'suspended') {
+      this.audioContext.resume().catch(e => console.log('Audio resume failed:', e));
+    }
 
 
     if (this.isPlaying) return;
@@ -88,16 +91,7 @@ class BackgroundMusicGenerator {
     }
   }
 
-  playRhythm() {
-    if (!this.audioContext) {
-      this.init();
-    }
-    if (this.audioContext.state === 'suspended') {
-      this.audioContext.resume().catch(e => console.log('Audio resume failed:', e));
-    }
-
-
-    if (this.isPlaying) return;
+  setVolume(volume) {
     this.volume = Math.max(0, Math.min(1, volume));
   }
 
