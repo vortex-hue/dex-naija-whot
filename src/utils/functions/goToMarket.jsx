@@ -1,6 +1,5 @@
 import randomCard from "./randomCard";
 import { addUserCard, addOpponentCard } from "../../redux/actions";
-import removeCardFromDeck from "../../redux/actions/removeCardFromDeck";
 
 const goToMarket = (
   player,
@@ -21,8 +20,9 @@ const goToMarket = (
   }
 
   if (card) {
-    // CRITICAL FIX: Remove the card from the deck so it can't be picked again
-    dispatch(removeCardFromDeck(card));
+    // We no longer remove cards from the master deck.
+    // ADD_USER_CARD/ADD_OPPONENT_CARD already adds them to usedCards,
+    // which is sufficient for market filtering.
     setOfUsedCards.unshift(card);
   }
 

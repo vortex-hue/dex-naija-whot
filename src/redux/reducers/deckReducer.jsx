@@ -1,7 +1,6 @@
 const deckReducer = (state = [], action) => {
-  if (action.type === "REMOVE_CARD_FROM_DECK") {
-    return state.filter((card) => card !== action.payload);
-  }
+  // The deck is now a constant Master List of 54 cards.
+  // We no longer remove cards from it; we filter them out based on usedCards.
   return state;
 };
 
