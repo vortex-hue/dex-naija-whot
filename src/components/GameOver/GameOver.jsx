@@ -66,21 +66,41 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
       <div className={style.inner}>
         <p className={style.title}>{title}</p>
         <p>{subtitle}</p>
-        {!isTournament ? (
-          <button
-            onClick={() => {
-              window.location.reload();
-            }}
-            className={style.btn}
-          >
-            PLAY AGAIN
-          </button>
+        {isTournament ? (
+          <div className={style.tournament_controls}>
+            <p className={style.tournament_msg}>
+              {isUserWinner
+                ? (isTournamentWin ? "Ultimate Victory! Returning to lobby..." : "Match Won! Proceeding to next round...")
+                : "Eliminated. Returning to lobby..."}
+            </p>
+            <button
+              onClick={() => {
+                window.location.href = "/";
+              }}
+              className={`${style.btn} ${style.lobby_btn}`}
+            >
+              BACK TO LOBBY
+            </button>
+          </div>
         ) : (
-          <p className={style.tournament_msg}>
-            {isUserWinner
-              ? (isTournamentWin ? "Ultimate Victory! Returning to lobby..." : "Match Won! Proceeding to next round...")
-              : "Eliminated. Returning to lobby..."}
-          </p>
+          <div className={style.friendly_controls}>
+            <button
+              onClick={() => {
+                window.location.reload();
+              }}
+              className={style.btn}
+            >
+              PLAY AGAIN
+            </button>
+            <button
+              onClick={() => {
+                window.location.href = "/";
+              }}
+              className={`${style.btn} ${style.lobby_btn}`}
+            >
+              BACK TO LOBBY
+            </button>
+          </div>
         )}
       </div>
     </div>
