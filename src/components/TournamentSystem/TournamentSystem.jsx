@@ -312,9 +312,15 @@ const TournamentSystem = () => {
                     >
                         <h3>Create New Tournament</h3>
                         <div className="button-group">
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(2)}>1v1 (2 Players)</motion.button>
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(4)}>Bracket (4 Players)</motion.button>
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(8)}>Bracket (8 Players)</motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(2)}>
+                                1v1 (2 Players) {isMiniPayUser && "($0.10)"}
+                            </motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(4)}>
+                                Bracket (4 Players) {isMiniPayUser && "($0.10)"}
+                            </motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(8)}>
+                                Bracket (8 Players) {isMiniPayUser && "($0.10)"}
+                            </motion.button>
                         </div>
                     </motion.div>
 

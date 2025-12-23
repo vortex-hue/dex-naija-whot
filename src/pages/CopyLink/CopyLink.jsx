@@ -8,9 +8,12 @@ import { useAccount } from "wagmi";
 import { usePay } from "../../utils/hooks/usePay";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
 
+import { useMiniPay } from "../../context/MiniPayContext";
+
 function CopyLink() {
   const navigate = useNavigate();
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { isMiniPayUser } = useMiniPay();
   const { pay, isPaying } = usePay();
 
   const [randomCode, setRandomCode] = useState("");
@@ -104,20 +107,20 @@ function CopyLink() {
                 width: '100%'
               }}
               onClick={async () => {
-                // If MiniPay/Wallet connected, require payment
-                if (isConnected) {
+                // Charge ONLY if detected as MiniPay user and connected
+                if (isMiniPayUser && isConnected) {
                   const success = await pay(0.1, 'create_lobby');
                   if (success) {
                     navigate(`/play-friend/${randomCode}`, { state: { paid: true } });
                   }
                 } else {
-                  // Fallback
+                  // Standard users play for free
                   navigate(`/play-friend/${randomCode}`);
                 }
               }}
               disabled={isPaying}
             >
-              {isPaying ? "PROCESSING PAYMENT..." : "START GAME ($0.10)"}
+              {isPaying ? "PROCESSING PAYMENT..." : (isMiniPayUser ? "START GAME ($0.10)" : "START GAME")}
             </button>
           </motion.div>
         </motion.div>
