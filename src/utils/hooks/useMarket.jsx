@@ -24,6 +24,7 @@ function useMarket() {
       // Refresh market
       dispatch(refreshUsedCards([...userCards, ...opponentCards, activeCard]));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [market.length, dispatch]);
 
   return { market };

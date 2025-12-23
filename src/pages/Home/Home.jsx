@@ -44,7 +44,6 @@ const floatVariants = {
 
 function Home() {
   const { isConnected } = useAccount();
-  const { connect } = useConnect();
   const { isMiniPayUser } = useMiniPay();
 
   return (

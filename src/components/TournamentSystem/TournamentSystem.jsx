@@ -13,7 +13,7 @@ const TournamentSystem = () => {
     const navigate = useNavigate();
     const { isConnected } = useAccount();
     const { isMiniPayUser } = useMiniPay();
-    const { pay, isPaying } = usePay();
+    const { pay } = usePay();
 
     // State
     const [tournaments, setTournaments] = useState([]);
