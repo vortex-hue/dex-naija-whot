@@ -7,10 +7,12 @@ import './TournamentSystem.css';
 import { generateRandomCode } from '../../utils/functions/generateRandomCode';
 import { useAccount } from 'wagmi';
 import { usePay } from '../../utils/hooks/usePay';
+import { useMiniPay } from '../../context/MiniPayContext';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
     const { isConnected } = useAccount();
+    const { isMiniPayUser } = useMiniPay();
     const { pay, isPaying } = usePay();
 
     // State
@@ -136,10 +138,16 @@ const TournamentSystem = () => {
     }, [navigate]);
 
     const createTournament = async (size) => {
-        if (isConnected) {
+        // Require Payment ONLY for MiniPay Users
+        if (isConnected && isMiniPayUser) {
             const success = await pay(0.1, 'create_tournament');
             if (!success) return;
         }
+
+        // Non-MiniPay users can create for free (optional feature)
+        // OR if you want to restrict it:
+        // if (!isMiniPayUser) { alert("Only MiniPay users can create tournaments!"); return; }
+
         socket.emit('create_tournament', { size, name: `Tournament ${Math.floor(Math.random() * 1000)}` });
     };
 

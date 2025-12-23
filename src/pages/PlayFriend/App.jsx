@@ -21,14 +21,14 @@ import socket from "../../socket/socket";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
 import useIsGameOver from "../../utils/hooks/useIsGameOver";
 import { useAccount } from 'wagmi';
+import { useMiniPay } from '../../context/MiniPayContext';
 import { usePay } from '../../utils/hooks/usePay';
-
-
 
 function App() {
   const { room_id } = useParams();
   const location = useLocation();
   const { isConnected } = useAccount();
+  const { isMiniPayUser } = useMiniPay();
   const { pay, isPaying } = usePay();
 
   const [hasPaid, setHasPaid] = useState(() => {
@@ -151,7 +151,7 @@ function App() {
     }
   }, [isGameOver, room_id, stateHasBeenInitialized]);
 
-  if (isConnected && !hasPaid) {
+  if (isConnected && isMiniPayUser && !hasPaid) {
     return (
       <div style={{
         position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',

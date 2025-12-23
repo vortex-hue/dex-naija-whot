@@ -17,6 +17,7 @@ import "../../index.css";
 
 import { useAccount } from 'wagmi';
 import { usePay } from '../../utils/hooks/usePay';
+import { useMiniPay } from '../../context/MiniPayContext';
 import React, { useState, useEffect } from 'react';
 
 function App() {
@@ -25,12 +26,14 @@ function App() {
   const opponentCards = useSelector((state) => state.opponentCards || []);
 
   const { address, isConnected } = useAccount();
+  const { isMiniPayUser } = useMiniPay();
   const { pay, isPaying } = usePay();
   const [isBlocked, setIsBlocked] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(true);
 
   useEffect(() => {
-    if (isConnected && address) {
+    // Only enforce rules if User is using MiniPay
+    if (isConnected && address && isMiniPayUser) {
       fetch(`${process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080'}/api/user/${address}`)
         .then(res => res.json())
         .then(data => {
@@ -41,9 +44,10 @@ function App() {
         })
         .catch(() => setCheckingStatus(false));
     } else {
+      // Free play for non-MiniPay users
       setCheckingStatus(false);
     }
-  }, [address, isConnected]);
+  }, [address, isConnected, isMiniPayUser]);
 
   if (checkingStatus) return <Preloader />;
 
