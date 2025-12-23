@@ -1,4 +1,4 @@
-# Decentralised Naija Whot (Open Source)
+# Dex Naija Whot (Stable Edition) 🎮🏆
 
 <br />
 
@@ -6,55 +6,54 @@
 
 <br />
 
-This is a game of Naija Whot built for the web. It has both single and multiplayer features. You can check it out [live here](http://localhost:3000).
+This is a premium, high-fidelity experience of Naija Whot built for the web. This stable edition includes advanced multiplayer features, tournament management, and a robust "Infinite Market" engine.
+
+Check it out [live here: whot.kwick.ng](https://whot.kwick.ng)
+
+## Key Features 🚀
+
+-   **Real-time Multiplayer**: Challenge friends or play in tournaments with low-latency synchronization.
+-   **Tournament Management**: Support for 2, 4, and 8-player bracketed tournaments.
+-   **Infinite Market Flow**: Never run out of cards. The game automatically shuffles and replenishes the market from used cards.
+-   **Stability & Fairness**:
+    -   **Manual Sync**: A "🔄 STUCK? SYNC" button to resolve occasional turn desyncs.
+    -   **Connection Watchdog**: Automatically detects and handles hanging connections.
+    -   **Server-Side Resolution**: Authoritative winner determination to ensure fair play.
+-   **Dynamic UI**: Premium Naija theme with smooth animations and responsive design.
 
 ## Technologies ⚙
 
-Front end:
+**Front end:**
+-   React & Redux (State Management)
+-   Socket.io-client (Real-time communication)
+-   React-flip-toolkit (Physics-based animations)
+-   Vanilla CSS (Modern, Responsive Design)
 
-- React
-- Redux
-- [React-flip-toolkit (for animations)](https://github.com/aholachek/react-flip-toolkit)
-- SCSS
+**Back end:**
+-   Node.js & Express
+-   Socket.io (Server-side authority)
 
-Back end
+## Running the project Locally 🚀
 
-- socket.io (Running on Node)
-
-## Running project 🚀
-
-The repo has three branches:
-
-- main: This holds the front end React code.
-- server: This holds the socket server code.
-- gh-pages: For Github Pages hosting.
-
-To run the project locally:
-
-1. Clone the main branch
-
-   ```
-   git clone https://github.com/AkpetiTrust/whot.git
+1. **Clone the frontend repository**
+   ```bash
+   git clone https://github.com/vortex-hue/dex-naija-whot.git
+   cd dex-naija-whot
    ```
 
-2. Run the front end using npm
-
-   ```
+2. **Install & Run**
+   ```bash
    npm install && npm start
    ```
 
-3. Clone the server branch
-
-   ```
-   git clone -b server https://github.com/AkpetiTrust/whot.git
-   ```
-
-4. Run the server using node
-
-   ```
-   node index.js
-   ```
+3. **Backend Setup**
+   The frontend expects a backend running at the configured socket URL (see `.env` or defaults). You can find the backend repository [here](https://github.com/vortex-hue/dex-naija-whot-backend).
 
 ## Contributing 💻
 
-Contributions are surely welcome! You can check out the [public roadmap](https://github.com/AkpetiTrust/whot/wiki/Public-Roadmap) to see the feature ideas in store for the game, then [create a new issue](https://github.com/AkpetiTrust/whot/issues/new/choose) if you're interested in contributing to any. If the idea you have isn't in the roadmap, still feel free to create a new issue to talk about the idea.
+Contributions are welcome! Please feel free to submit Pull Requests or open issues for feature requests and bug reports.
+
+## License 📄
+
+This project is licensed under the MIT License.
+
