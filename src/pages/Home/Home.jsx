@@ -5,8 +5,7 @@ import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
 
-import { useAccount, useConnect } from "wagmi";
-import { minipay } from "minipay-wagmi-connector";
+import { useAccount } from "wagmi";
 import { useMiniPay } from "../../context/MiniPayContext";
 
 // Animation Variants
