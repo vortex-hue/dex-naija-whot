@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
-import { Footer } from "../../components";
+
 import { useAccount, useConnect } from "wagmi";
 import { minipay } from "minipay-wagmi-connector";
 import { useMiniPay } from "../../context/MiniPayContext";
