@@ -150,17 +150,7 @@ function Home() {
                     📊 Leaderboard
                   </motion.button>
                 </Link>
-              ) : (
-                <motion.button
-                  className="cta-btn primary"
-                  onClick={() => connect({ connector: minipay() })}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{ background: '#329622' }} // Celo/MiniPay Green
-                >
-                  ⚡ Connect MiniPay
-                </motion.button>
-              )}
+              ) : null}
             </div>
           </motion.div>
 
