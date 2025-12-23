@@ -6,9 +6,14 @@ import confettiAnimation from "../../utils/functions/confettiAnimation";
 import { useEffect, useState } from "react";
 
 
-function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver }) {
+import { useAccount } from 'wagmi';
+import { usePay } from '../../utils/hooks/usePay';
+
+function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver, isComputer }) {
   const isGameOverHook = useIsGameOver();
   const [animationHasRun, setAnimationHasRun] = useState(false);
+  const { pay, isPaying } = usePay();
+  const { isConnected } = useAccount();
 
   const localGameOver = isGameOverHook();
 
@@ -38,12 +43,11 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
   useEffect(() => {
     let cleanup;
     if (isUserWinner && !animationHasRun) {
-      // Trigger confetti for any win, but maybe more for tournament?
+      // Trigger confetti for any win
       cleanup = confettiAnimation(confetti);
       setAnimationHasRun(true);
 
       if (isTournamentWin) {
-        // Extra blast for tournament winner
         setTimeout(() => {
           confetti({
             particleCount: 150,
@@ -58,6 +62,25 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
       if (cleanup) cleanup();
     };
   }, [isUserWinner, animationHasRun, isTournamentWin]);
+
+  // Report Result to Backend (for XP and Payment Logic)
+  useEffect(() => {
+    if (!isTournament && gameOverState.answer) {
+      const storedId = localStorage.getItem("storedId");
+      // Only report if it looks like a wallet address (MiniPay user)
+      if (storedId && storedId.startsWith("0x")) {
+        const result = isUserWinner ? 'WIN' : 'LOSS';
+        const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+        console.log(`📝 Reporting Match Result: ${result} for ${storedId}`);
+
+        fetch(`${apiUrl}/api/report-match`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ address: storedId, result })
+        }).catch(err => console.error("❌ Failed to report match:", err));
+      }
+    }
+  }, [gameOverState.answer, isUserWinner, isTournament]);
 
   return (
     <div
@@ -84,14 +107,33 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
           </div>
         ) : (
           <div className={style.friendly_controls}>
-            <button
-              onClick={() => {
-                window.location.reload();
-              }}
-              className={style.btn}
-            >
-              PLAY AGAIN
-            </button>
+
+            {isComputer && !isUserWinner && isConnected ? (
+              <button
+                onClick={async () => {
+                  const success = await pay(0.1, 'computer_retry');
+                  if (success) {
+                    window.location.reload();
+                  }
+                }}
+                disabled={isPaying}
+                className={style.btn}
+                style={{ background: '#4CAF50', border: 'none', marginLeft: '10px' }}
+              >
+                {isPaying ? "PROCESSING..." : "RETRY WITH $0.10"}
+              </button>
+            ) : (
+              (!isComputer || isUserWinner) && (
+                <button
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                  className={style.btn}
+                >
+                  PLAY AGAIN
+                </button>
+              )
+            )}
             <button
               onClick={() => {
                 window.location.href = "/";
@@ -103,7 +145,7 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 }
 

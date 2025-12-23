@@ -16,15 +16,25 @@ import { Flipper } from "react-flip-toolkit";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import "../../index.css";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import socket from "../../socket/socket";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
 import useIsGameOver from "../../utils/hooks/useIsGameOver";
+import { useAccount } from 'wagmi';
+import { usePay } from '../../utils/hooks/usePay';
 
 
 
 function App() {
   const { room_id } = useParams();
+  const location = useLocation();
+  const { isConnected } = useAccount();
+  const { pay, isPaying } = usePay();
+
+  const [hasPaid, setHasPaid] = useState(() => {
+    return location.state?.paid || false;
+  });
+
   const isGameOver = useIsGameOver();
   const [errorText, setErrorText] = useState("");
   const [onlineState, setOnlineState] = useState({
@@ -140,6 +150,33 @@ function App() {
       });
     }
   }, [isGameOver, room_id, stateHasBeenInitialized]);
+
+  if (isConnected && !hasPaid) {
+    return (
+      <div style={{
+        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+        background: 'rgba(0,0,0,0.9)', color: 'white', display: 'flex', flexDirection: 'column',
+        justifyContent: 'center', alignItems: 'center', zIndex: 9999
+      }}>
+        <h2 style={{ marginBottom: '10px' }}>Friend Match Entry</h2>
+        <p style={{ fontSize: '1.2rem' }}>Entry Fee: $0.10</p>
+        <button
+          onClick={async () => {
+            const s = await pay(0.1, 'join_game');
+            if (s) setHasPaid(true);
+          }}
+          disabled={isPaying}
+          style={{
+            marginTop: '20px', padding: '15px 30px', background: '#4CAF50',
+            border: 'none', borderRadius: '8px', color: 'white', fontSize: '1.2rem', cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(76, 175, 80, 0.4)'
+          }}
+        >
+          {isPaying ? "Wait small..." : "Pay $0.10"}
+        </button>
+      </div>
+    );
+  }
 
   if (errorText) return <ErrorPage errorText={errorText} />;
 

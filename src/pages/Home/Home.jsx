@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
+import { Footer } from "../../components";
+import { useAccount, useConnect } from "wagmi";
+import { minipay } from "minipay-wagmi-connector";
+import { useMiniPay } from "../../context/MiniPayContext";
 
 // Animation Variants
 const containerVariants = {
@@ -39,6 +43,10 @@ const floatVariants = {
 };
 
 function Home() {
+  const { isConnected } = useAccount();
+  const { connect } = useConnect();
+  const { isMiniPayUser } = useMiniPay();
+
   return (
     <motion.section
       className="home naija-theme"
@@ -127,6 +135,32 @@ function Home() {
                   🏆 Join Tournament
                 </motion.button>
               </Link>
+            </div>
+
+            {/* MiniPay & Leaderboard Section */}
+            <div className="cta-group" style={{ marginTop: '15px' }}>
+              {(isConnected || isMiniPayUser) ? (
+                <Link to="/leaderboard">
+                  <motion.button
+                    className="cta-btn secondary"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{ border: '1px solid #4CAF50', color: '#4CAF50' }}
+                  >
+                    📊 Leaderboard
+                  </motion.button>
+                </Link>
+              ) : (
+                <motion.button
+                  className="cta-btn primary"
+                  onClick={() => connect({ connector: minipay() })}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ background: '#329622' }} // Celo/MiniPay Green
+                >
+                  ⚡ Connect MiniPay
+                </motion.button>
+              )}
             </div>
           </motion.div>
 

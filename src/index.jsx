@@ -1,7 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame } from "./pages";
+import { Web3Provider } from "./context/Web3Provider";
+import { MiniPayProvider } from "./context/MiniPayContext";
+import WalletObserver from "./components/WalletObserver";
+import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, Leaderboard } from "./pages";
 
 
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
@@ -18,18 +21,24 @@ window.addEventListener('unhandledrejection', (event) => {
 
 root.render(
   <React.StrictMode>
-    <ErrorBoundary>
-      <Router>
-        <Routes>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/play-computer" exact element={<PlayComputer />} />
-          <Route path="/copylink" exact element={<CopyLink />} />
-          <Route path="/play-friend" exact element={<PlayFriend />} />
-          <Route path="/play-friend/:room_id" exact element={<PlayFriend />} />
-          <Route path="/play-tournament/:room_id" exact element={<TournamentGame />} />
-          <Route path="/tournaments" exact element={<Tournament />} />
-        </Routes>
-      </Router>
-    </ErrorBoundary>
+    <Web3Provider>
+      <MiniPayProvider>
+        <WalletObserver />
+        <ErrorBoundary>
+          <Router>
+            <Routes>
+              <Route path="/" exact element={<Home />} />
+              <Route path="/play-computer" exact element={<PlayComputer />} />
+              <Route path="/copylink" exact element={<CopyLink />} />
+              <Route path="/play-friend" exact element={<PlayFriend />} />
+              <Route path="/play-friend/:room_id" exact element={<PlayFriend />} />
+              <Route path="/play-tournament/:room_id" exact element={<TournamentGame />} />
+              <Route path="/tournaments" exact element={<Tournament />} />
+              <Route path="/leaderboard" exact element={<Leaderboard />} />
+            </Routes>
+          </Router>
+        </ErrorBoundary>
+      </MiniPayProvider>
+    </Web3Provider>
   </React.StrictMode>
 );

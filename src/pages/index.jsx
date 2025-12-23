@@ -4,5 +4,6 @@ import CopyLink from "./CopyLink/CopyLink";
 import PlayFriend from "./PlayFriend/PlayFriend";
 import Tournament from "./Tournament/Tournament";
 import TournamentGame from "./TournamentGame/TournamentGame";
+import Leaderboard from "./Leaderboard/Leaderboard";
 
-export { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame };
+export { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, Leaderboard };

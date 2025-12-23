@@ -5,9 +5,13 @@ import socket from '../../socket/socket';
 import { useNavigate } from 'react-router-dom';
 import './TournamentSystem.css';
 import { generateRandomCode } from '../../utils/functions/generateRandomCode';
+import { useAccount } from 'wagmi';
+import { usePay } from '../../utils/hooks/usePay';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
+    const { isConnected } = useAccount();
+    const { pay, isPaying } = usePay();
 
     // State
     const [tournaments, setTournaments] = useState([]);
@@ -131,7 +135,11 @@ const TournamentSystem = () => {
         };
     }, [navigate]);
 
-    const createTournament = (size) => {
+    const createTournament = async (size) => {
+        if (isConnected) {
+            const success = await pay(0.1, 'create_tournament');
+            if (!success) return;
+        }
         socket.emit('create_tournament', { size, name: `Tournament ${Math.floor(Math.random() * 1000)}` });
     };
 

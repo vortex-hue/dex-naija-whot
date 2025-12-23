@@ -3,9 +3,16 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Footer } from "../../components";
 import "../../styles/copylink.css";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
+import { usePay } from "../../utils/hooks/usePay";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
 
 function CopyLink() {
+  const navigate = useNavigate();
+  const { isConnected } = useAccount();
+  const { pay, isPaying } = usePay();
+
   const [randomCode, setRandomCode] = useState("");
   const [copied, setCopied] = useState(false);
   const [link, setLink] = useState("");
@@ -84,7 +91,34 @@ function CopyLink() {
             </motion.button>
           </motion.div>
           <motion.div variants={itemVariants} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Link to={`/play-friend/${randomCode}`}>START GAME</Link>
+            <button
+              className="action-btn"
+              style={{
+                background: '#4CAF50',
+                color: 'white',
+                padding: '12px 24px',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                cursor: 'pointer',
+                width: '100%'
+              }}
+              onClick={async () => {
+                // If MiniPay/Wallet connected, require payment
+                if (isConnected) {
+                  const success = await pay(0.1, 'create_lobby');
+                  if (success) {
+                    navigate(`/play-friend/${randomCode}`, { state: { paid: true } });
+                  }
+                } else {
+                  // Fallback
+                  navigate(`/play-friend/${randomCode}`);
+                }
+              }}
+              disabled={isPaying}
+            >
+              {isPaying ? "PROCESSING PAYMENT..." : "START GAME ($0.10)"}
+            </button>
           </motion.div>
         </motion.div>
       </main>
