@@ -65,9 +65,11 @@ function CardComponent({
 
     if (isGameOver().answer) return;
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       playOpponentCard();
     }, delay);
+
+    return () => clearTimeout(timer);
   }, [activeCard, userCards, opponentCards, isPlayed, isGameOver, playOpponentCard, delay]);
 
   const [isProcessing, setIsProcessing] = useState(false);

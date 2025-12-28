@@ -33,7 +33,7 @@ function ComputerCards() {
   let isPlayed = false;
   let isPlayedSet = false;
   // I'm using isPlayedSet to make sure isPlayed is only true for one card
-  opponentCards.filter(Boolean).forEach((card) => {
+  opponentCards.filter(Boolean).forEach((card, index) => {
     if (!isPlayedSet) {
       isPlayed =
         whoIsToPlay === "opponent" &&
@@ -52,7 +52,7 @@ function ComputerCards() {
         number={card.number}
         isMine={false}
         isShown={false}
-        key={card.shape + card.number}
+        key={`${card.shape}-${card.number}-${index}`}
         isPlayed={isPlayed}
       />
     );
