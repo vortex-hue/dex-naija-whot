@@ -9,6 +9,7 @@ import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, L
 
 
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import { NetworkMonitor } from "./components";
 
 console.log("🚀 App initializing...");
 console.log("🌐 Ethereum Provider present:", !!window.ethereum);
@@ -30,6 +31,7 @@ root.render(
       <Web3Provider>
         <MiniPayProvider>
           <WalletObserver />
+          <NetworkMonitor />
           <Router>
             <Routes>
               <Route path="/" exact element={<Home />} />

@@ -113,6 +113,9 @@ function CopyLink() {
                   const success = await pay(0.1, 'create_lobby');
                   if (success) {
                     navigate(`/play-friend/${randomCode}`, { state: { paid: true } });
+                  } else {
+                    // Payment failed or timed out
+                    // Alert handled in usePay, but we stay on this screen
                   }
                 } else {
                   // Standard users play for free
@@ -121,7 +124,7 @@ function CopyLink() {
               }}
               disabled={isPaying}
             >
-              {isPaying ? "PROCESSING PAYMENT..." : (isMiniPayUser ? "START GAME ($0.10)" : "START GAME")}
+              {isPaying ? "VERIFYING PAYMENT..." : (isMiniPayUser ? "START GAME ($0.10)" : "START GAME")}
             </button>
           </motion.div>
         </motion.div>

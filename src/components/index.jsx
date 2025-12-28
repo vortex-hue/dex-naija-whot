@@ -37,3 +37,4 @@ export {
   LoyaltySystem,
   BackButton,
 };
+export { default as NetworkMonitor } from "./NetworkMonitor/NetworkMonitor";
