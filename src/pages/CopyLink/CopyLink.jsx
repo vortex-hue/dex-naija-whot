@@ -12,7 +12,7 @@ import { useMiniPay } from "../../context/MiniPayContext";
 
 function CopyLink() {
   const navigate = useNavigate();
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { isMiniPayUser } = useMiniPay();
   const { pay, isPaying } = usePay();
 

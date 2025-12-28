@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TournamentSystem, Footer, BackButton } from '../../components';
-import { Link } from 'react-router-dom';
 import './Tournament.css';
 
 const Tournament = () => {
