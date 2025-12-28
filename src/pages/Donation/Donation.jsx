@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { BackButton } from '../../components';
 import { usePay } from '../../utils/hooks/usePay';
 import { useMiniPay } from '../../context/MiniPayContext';
+import { useAccount } from 'wagmi';
+import confetti from 'canvas-confetti';
+import '../../styles/home.css';
 
 const Donation = () => {
     const { pay, isPaying } = usePay();
