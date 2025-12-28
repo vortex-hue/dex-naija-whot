@@ -12,7 +12,7 @@ const BackButton = ({ to = '/', style = {} }) => {
             onClick={() => navigate(to)}
             style={{
                 position: 'absolute',
-                top: '20px',
+                top: 'max(20px, env(safe-area-inset-top))',
                 left: '20px',
                 background: 'rgba(255, 255, 255, 0.2)',
                 border: '1px solid rgba(255, 255, 255, 0.4)',
