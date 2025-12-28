@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Leaderboard.module.css';
 
+import { BackButton } from '../../components';
+
 const Leaderboard = () => {
     const [leaderboard, setLeaderboard] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,9 +24,9 @@ const Leaderboard = () => {
 
     return (
         <div className={styles.container}>
+            <BackButton style={{ top: '20px', left: '20px', position: 'absolute' }} />
             <div className={styles.header}>
                 <h1>🏆 Leaderboard</h1>
-                <button onClick={() => window.history.back()} className={styles.backBtn}>Back</button>
             </div>
 
             {loading ? (

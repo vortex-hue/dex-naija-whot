@@ -7,6 +7,7 @@ import {
   Preloader,
   AudioControls,
   MissionPanel,
+  BackButton,
 } from "../../components";
 import { Flipper } from "react-flip-toolkit";
 import { useSelector } from "react-redux";
@@ -92,7 +93,7 @@ function App() {
   return (
     <Flipper flipKey={[activeCard, ...userCards, ...opponentCards]}>
       <div className="App">
-
+        <BackButton style={{ top: '10px', left: '10px' }} />
         <MissionPanel />
         <AudioControls />
 

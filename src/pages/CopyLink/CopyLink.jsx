@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-import { Footer } from "../../components";
+import { Footer, BackButton } from "../../components";
 import "../../styles/copylink.css";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
@@ -58,6 +58,7 @@ function CopyLink() {
   return (
     <section className="naija-theme-container copylink">
       <main>
+        <BackButton style={{ top: '20px', left: '20px', position: 'fixed' }} />
         <motion.div
           className="inner"
           variants={containerVariants}

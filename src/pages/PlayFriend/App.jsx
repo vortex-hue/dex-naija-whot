@@ -10,6 +10,7 @@ import {
   ConnectionLoader,
   AudioControls,
   MissionPanel,
+  BackButton,
 } from "../../components";
 import Chat from "../../components/Chat/Chat";
 import { Flipper } from "react-flip-toolkit";
@@ -190,6 +191,7 @@ function App() {
   return (
     <Flipper flipKey={flipKey}>
       <div className="App">
+        <BackButton style={{ top: '10px', left: '10px' }} />
         {timeLeft !== null && timeLeft <= 30 && timeLeft > 0 && (
           <div className="round-timer-overlay">
             <div className="timer-content">
