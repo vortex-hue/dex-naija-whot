@@ -1,4 +1,4 @@
-import { useAccount, useChainId, useWriteContract } from 'wagmi';
+import { useAccount, useChainId, useWriteContract, usePublicClient } from 'wagmi';
 import { parseUnits, erc20Abi } from 'viem';
 import { useState } from 'react';
 
@@ -11,6 +11,7 @@ export function usePay() {
     const { address, isConnected } = useAccount();
     const chainId = useChainId();
     const { writeContractAsync } = useWriteContract();
+    const publicClient = usePublicClient(); // Access viem public client
     const [isPaying, setIsPaying] = useState(false);
 
     const pay = async (amountUSD, type) => {
@@ -34,7 +35,16 @@ export function usePay() {
                 args: [treasury, amount],
             });
 
-            console.log("✅ Payment Sent. Tx:", txHash);
+            console.log("✅ Payment Sent. Tx Hash:", txHash);
+            console.log("⏳ Waiting for transaction confirmation...");
+
+            // WAIT for transaction to be mined
+            const receipt = await publicClient.waitForTransactionReceipt({
+                hash: txHash,
+                confirmations: 1
+            });
+
+            console.log("🧱 Transaction Mined!", receipt);
 
             // Verify with backend
             const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
@@ -50,11 +60,15 @@ export function usePay() {
             });
 
             const data = await res.json();
+            console.log("📡 Backend Verification Result:", data);
+
             setIsPaying(false);
             return data.success;
 
         } catch (error) {
-            console.error("Payment Failed:", error);
+            console.error("❌ Payment Failed:", error);
+            // Fallback: If user rejected, return false.
+            // If network error but tx might have gone through, we can't easily know without more logic.
             setIsPaying(false);
             return false;
         }
