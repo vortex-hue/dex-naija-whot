@@ -42,8 +42,8 @@ const floatVariants = {
 };
 
 function Home() {
-  const { isConnected } = useAccount();
-  const { isMiniPayUser } = useMiniPay();
+  // const { isConnected } = useAccount();
+  // const { isMiniPayUser } = useMiniPay();
 
   return (
     <motion.section
@@ -135,20 +135,29 @@ function Home() {
               </Link>
             </div>
 
-            {/* MiniPay & Leaderboard Section */}
+            {/* MiniPay & Leaderboard & Donation Section */}
             <div className="cta-group" style={{ marginTop: '15px' }}>
-              {(isConnected || isMiniPayUser) ? (
-                <Link to="/leaderboard">
-                  <motion.button
-                    className="cta-btn secondary"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{ border: '1px solid #4CAF50', color: '#4CAF50' }}
-                  >
-                    📊 Leaderboard
-                  </motion.button>
-                </Link>
-              ) : null}
+              <Link to="/leaderboard">
+                <motion.button
+                  className="cta-btn secondary"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ border: '1px solid #4CAF50', color: '#4CAF50' }}
+                >
+                  📊 Leaderboard
+                </motion.button>
+              </Link>
+
+              <Link to="/donation">
+                <motion.button
+                  className="cta-btn secondary"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ border: '1px solid #FFD700', color: '#FFD700', marginLeft: '10px' }}
+                >
+                  ❤️ Donate
+                </motion.button>
+              </Link>
             </div>
           </motion.div>
 

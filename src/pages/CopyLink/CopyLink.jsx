@@ -12,9 +12,9 @@ import { useMiniPay } from "../../context/MiniPayContext";
 
 function CopyLink() {
   const navigate = useNavigate();
-  const { isConnected } = useAccount();
-  const { isMiniPayUser } = useMiniPay();
-  const { pay, isPaying } = usePay();
+  // const { isConnected } = useAccount();
+  // const { isMiniPayUser } = useMiniPay();
+  // const { pay, isPaying } = usePay();
 
   const [randomCode, setRandomCode] = useState("");
   const [copied, setCopied] = useState(false);
@@ -107,24 +107,11 @@ function CopyLink() {
                 cursor: 'pointer',
                 width: '100%'
               }}
-              onClick={async () => {
-                // Charge ONLY if detected as MiniPay user and connected
-                if (isMiniPayUser && isConnected) {
-                  const success = await pay(0.1, 'create_lobby');
-                  if (success) {
-                    navigate(`/play-friend/${randomCode}`, { state: { paid: true } });
-                  } else {
-                    // Payment failed or timed out
-                    // Alert handled in usePay, but we stay on this screen
-                  }
-                } else {
-                  // Standard users play for free
-                  navigate(`/play-friend/${randomCode}`);
-                }
+              onClick={() => {
+                navigate(`/play-friend/${randomCode}`);
               }}
-              disabled={isPaying}
             >
-              {isPaying ? "VERIFYING PAYMENT..." : (isMiniPayUser ? "START GAME ($0.10)" : "START GAME")}
+              START GAME
             </button>
           </motion.div>
         </motion.div>

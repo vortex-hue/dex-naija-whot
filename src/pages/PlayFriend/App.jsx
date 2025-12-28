@@ -152,38 +152,7 @@ function App() {
     }
   }, [isGameOver, room_id, stateHasBeenInitialized]);
 
-  if (isConnected && isMiniPayUser && !hasPaid) {
-    return (
-      <div style={{
-        position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-        background: 'rgba(0,0,0,0.9)', color: 'white', display: 'flex', flexDirection: 'column',
-        justifyContent: 'center', alignItems: 'center', zIndex: 9999
-      }}>
-        <h2 style={{ marginBottom: '10px' }}>Friend Match Entry</h2>
-        <p style={{ fontSize: '1.2rem' }}>Entry Fee: $0.10</p>
-        <button
-          onClick={async () => {
-            const s = await pay(0.1, 'join_game');
-            if (s) {
-              setHasPaid(true);
-              // Force immediate sync to ensure game loads
-              setTimeout(() => {
-                if (window.syncWhotGame) window.syncWhotGame();
-              }, 500);
-            }
-          }}
-          disabled={isPaying}
-          style={{
-            marginTop: '20px', padding: '15px 30px', background: '#4CAF50',
-            border: 'none', borderRadius: '8px', color: 'white', fontSize: '1.2rem', cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(76, 175, 80, 0.4)'
-          }}
-        >
-          {isPaying ? "Verifying Payment..." : "Pay $0.10"}
-        </button>
-      </div>
-    );
-  }
+
 
   if (errorText) return <ErrorPage errorText={errorText} />;
 

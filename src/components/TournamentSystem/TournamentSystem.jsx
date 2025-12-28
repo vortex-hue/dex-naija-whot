@@ -138,16 +138,7 @@ const TournamentSystem = () => {
     }, [navigate]);
 
     const createTournament = async (size) => {
-        // Require Payment ONLY for MiniPay Users
-        if (isConnected && isMiniPayUser) {
-            const success = await pay(0.1, 'create_tournament');
-            if (!success) return;
-        }
-
-        // Non-MiniPay users can create for free (optional feature)
-        // OR if you want to restrict it:
-        // if (!isMiniPayUser) { alert("Only MiniPay users can create tournaments!"); return; }
-
+        // Free for everyone now - Donation model
         socket.emit('create_tournament', { size, name: `Tournament ${Math.floor(Math.random() * 1000)}` });
     };
 
@@ -313,10 +304,10 @@ const TournamentSystem = () => {
                         <h3>Create New Tournament</h3>
                         <div className="button-group">
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(2)}>
-                                1v1 (2 Players) {isMiniPayUser && "($0.10)"}
+                                1v1 (2 Players)
                             </motion.button>
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(4)}>
-                                Bracket (4 Players) {isMiniPayUser && "($0.10)"}
+                                Bracket (4 Players)
                             </motion.button>
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(8)}>
                                 Bracket (8 Players) {isMiniPayUser && "($0.10)"}

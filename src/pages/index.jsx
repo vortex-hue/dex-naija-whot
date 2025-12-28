@@ -5,5 +5,6 @@ import PlayFriend from "./PlayFriend/PlayFriend";
 import Tournament from "./Tournament/Tournament";
 import TournamentGame from "./TournamentGame/TournamentGame";
 import Leaderboard from "./Leaderboard/Leaderboard";
+import Donation from "./Donation/Donation";
 
-export { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, Leaderboard };
+export { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, Leaderboard, Donation };

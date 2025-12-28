@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Web3Provider } from "./context/Web3Provider";
 import { MiniPayProvider } from "./context/MiniPayContext";
 import WalletObserver from "./components/WalletObserver";
-import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, Leaderboard } from "./pages";
+import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, Leaderboard, Donation } from "./pages";
 
 
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
@@ -42,6 +42,7 @@ root.render(
               <Route path="/play-tournament/:room_id" exact element={<TournamentGame />} />
               <Route path="/tournaments" exact element={<Tournament />} />
               <Route path="/leaderboard" exact element={<Leaderboard />} />
+              <Route path="/donation" exact element={<Donation />} />
             </Routes>
           </Router>
         </MiniPayProvider>
