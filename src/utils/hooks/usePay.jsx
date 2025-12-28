@@ -20,6 +20,11 @@ export function usePay() {
             return false;
         }
 
+        if (!publicClient) {
+            alert("System Error: Blockchain client not initialized. Try reloading.");
+            return false;
+        }
+
         setIsPaying(true);
         try {
             const tokenAddress = CUSD_ADDRESS[chainId] || CUSD_ADDRESS[44787]; // Default to Testnet
@@ -36,9 +41,10 @@ export function usePay() {
             });
 
             console.log("✅ Payment Sent. Tx Hash:", txHash);
-            console.log("⏳ Waiting for transaction confirmation...");
+            // alert(`Payment sent! Waiting for confirmation...`); // Optional: Feedback to user
 
             // WAIT for transaction to be mined
+            console.log("⏳ Waiting for receipt...");
             const receipt = await publicClient.waitForTransactionReceipt({
                 hash: txHash,
                 confirmations: 1
@@ -67,8 +73,12 @@ export function usePay() {
 
         } catch (error) {
             console.error("❌ Payment Failed:", error);
-            // Fallback: If user rejected, return false.
-            // If network error but tx might have gone through, we can't easily know without more logic.
+
+            // Extract meaningful error message
+            let msg = error.message || "Unknown error";
+            if (msg.includes("User rejected")) msg = "User cancelled payment.";
+
+            alert("Payment Failed: " + msg);
             setIsPaying(false);
             return false;
         }
