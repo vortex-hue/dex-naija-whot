@@ -1,3 +1,4 @@
+/* global BigInt */
 import { useAccount, useChainId, useWriteContract, usePublicClient } from 'wagmi';
 import { parseUnits, erc20Abi, formatUnits } from 'viem';
 import { useState } from 'react';
