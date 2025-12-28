@@ -164,7 +164,13 @@ function App() {
         <button
           onClick={async () => {
             const s = await pay(0.1, 'join_game');
-            if (s) setHasPaid(true);
+            if (s) {
+              setHasPaid(true);
+              // Force immediate sync to ensure game loads
+              setTimeout(() => {
+                if (window.syncWhotGame) window.syncWhotGame();
+              }, 500);
+            }
           }}
           disabled={isPaying}
           style={{
@@ -173,7 +179,7 @@ function App() {
             boxShadow: '0 4px 15px rgba(76, 175, 80, 0.4)'
           }}
         >
-          {isPaying ? "Wait small..." : "Pay $0.10"}
+          {isPaying ? "Verifying Payment..." : "Pay $0.10"}
         </button>
       </div>
     );
