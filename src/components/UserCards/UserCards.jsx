@@ -9,13 +9,13 @@ function UserCards() {
   return (
     <div className="scroll-container">
       <div className="grid">
-        {(userCards || []).filter(Boolean).map((card) => (
+        {(userCards || []).filter(Boolean).map((card, index) => (
           <CardComponent
             shape={card.shape}
             number={card.number}
             isMine={true}
             isShown={true}
-            key={card.shape + card.number}
+            key={`${card.shape}-${card.number}-${index}`}
           />
         ))}
       </div>
