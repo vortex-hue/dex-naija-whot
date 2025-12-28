@@ -12,14 +12,20 @@ export const MiniPayProvider = ({ children }) => {
     const [isMiniPayUser, setIsMiniPayUser] = useState(false);
 
     useEffect(() => {
-        // Detect MiniPay environment
-        const isMiniPay = window.ethereum && window.ethereum.isMiniPay;
+        try {
+            // Detect MiniPay environment safely
+            const isMiniPay = !!(window.ethereum && (window.ethereum.isMiniPay || window.ethereum.isOpera));
+            console.log("🔍 MiniPay Detection:", isMiniPay);
 
-        if (isMiniPay) {
-            setIsMiniPayUser(true);
-            if (!isConnected) {
-                connect({ connector: minipay() });
+            if (isMiniPay) {
+                setIsMiniPayUser(true);
+                if (!isConnected) {
+                    console.log("⚡ Auto-connecting MiniPay...");
+                    connect({ connector: minipay() });
+                }
             }
+        } catch (error) {
+            console.error("🔥 Error detecting MiniPay:", error);
         }
     }, [isConnected, connect]);
 

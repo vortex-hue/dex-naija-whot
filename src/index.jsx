@@ -1,3 +1,4 @@
+import "./polyfills";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -9,22 +10,26 @@ import { PlayComputer, Home, CopyLink, PlayFriend, Tournament, TournamentGame, L
 
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
+console.log("🚀 App initializing...");
+console.log("🌐 Ethereum Provider present:", !!window.ethereum);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 window.addEventListener('error', (event) => {
   console.error("🔥 GLOBAL UNCAUGHT ERROR:", event.error);
+  alert("App Error: " + (event.error ? event.error.message : "Unknown error"));
 });
 
 window.addEventListener('unhandledrejection', (event) => {
   console.error("🔥 UNHANDLED PROMISE REJECTION:", event.reason);
+  alert("Promise Error: " + event.reason);
 });
 
 root.render(
   <React.StrictMode>
-    <Web3Provider>
-      <MiniPayProvider>
-        <WalletObserver />
-        <ErrorBoundary>
+    <ErrorBoundary>
+      <Web3Provider>
+        <MiniPayProvider>
+          <WalletObserver />
           <Router>
             <Routes>
               <Route path="/" exact element={<Home />} />
@@ -37,8 +42,8 @@ root.render(
               <Route path="/leaderboard" exact element={<Leaderboard />} />
             </Routes>
           </Router>
-        </ErrorBoundary>
-      </MiniPayProvider>
-    </Web3Provider>
+        </MiniPayProvider>
+      </Web3Provider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
