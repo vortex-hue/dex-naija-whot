@@ -97,11 +97,10 @@ export function usePay() {
             });
 
             console.log("✅ Payment Sent. Tx Hash:", txHash);
-            // alert("Payment Sent! Verifying..."); // Optional feedback
 
-            // 3. Verify with Backend (IMMEDIATELY - let server wait for mining)
+            // 3. Verify with Backend (FIRE AND FORGET for UI speed if it's a donation)
             const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
-            const res = await fetch(`${apiUrl}/api/verify-payment`, {
+            const verificationPromise = fetch(`${apiUrl}/api/verify-payment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -111,17 +110,25 @@ export function usePay() {
                     type,
                     tokenSymbol: selectedToken.symbol
                 })
+            }).then(r => r.json()).then(data => {
+                console.log("📡 Background Verification Result:", data);
+                return data.success;
+            }).catch(err => {
+                console.error("📡 Background Verification Error:", err);
+                return false;
             });
 
-            const data = await res.json();
-            console.log("📡 Backend Verification Result:", data);
-
-            if (!data.success) {
-                alert("Verification Failed: " + (data.message || "Unknown error"));
+            // If it's a donation, we don't make the user wait for backend polling.
+            // We show the success screen as soon as the wallet transaction is sent.
+            if (type === 'donation') {
+                setIsPaying(false);
+                return true;
             }
 
+            // For non-donations (if any are left), we still wait.
+            const data = await verificationPromise;
             setIsPaying(false);
-            return data.success;
+            return data;
 
         } catch (error) {
             console.error("❌ Payment Failed:", error);
