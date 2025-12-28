@@ -14,6 +14,8 @@ const Donation = () => {
     const [customAmount, setCustomAmount] = useState('');
     const [selectedAmount, setSelectedAmount] = useState(null);
 
+    const [isSuccess, setIsSuccess] = useState(false);
+
     const presets = [0.5, 1, 2, 5, 10, 20];
 
     const handleDonate = async () => {
@@ -31,16 +33,66 @@ const Donation = () => {
         const success = await pay(amount, 'donation');
         if (success) {
             confetti({
-                particleCount: 150,
-                spread: 70,
+                particleCount: 200,
+                spread: 100,
                 origin: { y: 0.6 },
                 colors: ['#FFD700', '#008751', '#FFFFFF']
             });
-            alert(`Thank you for your generosity! ❤️ ($${amount})`);
-            setCustomAmount('');
-            setSelectedAmount(null);
+            setIsSuccess(true);
         }
     };
+
+    if (isSuccess) {
+        return (
+            <div className="naija-theme-container" style={{ padding: '20px', minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <BackButton style={{ top: '20px', left: '20px' }} />
+
+                <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    style={{
+                        background: 'white', padding: '40px', borderRadius: '25px',
+                        textAlign: 'center', maxWidth: '400px', width: '100%',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                    }}
+                >
+                    <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1, rotate: 360 }}
+                        transition={{ type: "spring", delay: 0.2 }}
+                        style={{ fontSize: '5rem', marginBottom: '20px' }}
+                    >
+                        🎉
+                    </motion.div>
+
+                    <h1 style={{ color: '#008751', marginBottom: '15px' }}>Thank You!</h1>
+
+                    <p style={{ fontSize: '1.2rem', color: '#555', marginBottom: '30px' }}>
+                        Your support means the world to us. This donation will go a long way in keeping the game running and improving!
+                    </p>
+
+                    <a href="/" style={{ textDecoration: 'none' }}>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            style={{
+                                padding: '15px 30px',
+                                background: '#008751',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '12px',
+                                fontSize: '1.1rem',
+                                fontWeight: 'bold',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Return Home 🏠
+                        </motion.button>
+                    </a>
+                </motion.div>
+            </div>
+        );
+    }
 
     // Fallback for Non-MiniPay Users (Flutterwave)
     if (!isMiniPayUser) {
