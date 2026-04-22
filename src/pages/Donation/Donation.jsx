@@ -1,45 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BackButton } from '../../components';
-import { useAccount } from 'wagmi';
-import confetti from 'canvas-confetti';
 import '../../styles/home.css';
 
 const Donation = () => {
-    const { isConnected } = useAccount();
-    const [selectedAmount, setSelectedAmount] = useState(null);
-
     const [isSuccess, setIsSuccess] = useState(false);
-
-    const presets = [0.5, 1, 2, 5, 10, 20];
-
-    const handleDonate = async () => {
-        const amount = selectedAmount || parseFloat(customAmount);
-        if (!amount || amount <= 0) {
-            alert("Please select or enter a valid amount!");
-            return;
-        }
-
-        if (!isConnected) {
-            alert("Please connect your wallet first (MiniPay or external).");
-            return;
-        }
-
-        console.log("💰 Initiating donation of $", amount);
-        const success = await pay(amount, 'donation');
-        console.log("📡 Donation result:", success);
-
-        if (success) {
-            confetti({
-                particleCount: 200,
-                spread: 100,
-                origin: { y: 0.6 },
-                colors: ['#FFD700', '#008751', '#FFFFFF']
-            });
-            setIsSuccess(true);
-            window.scrollTo(0, 0);
-        }
-    };
 
     return (
         <div className="naija-theme-container" style={{ padding: '20px', minHeight: '100dvh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
