@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styles from './Leaderboard.module.css';
 
 import { BackButton } from '../../components';
+import { getApiUrl } from '../../utils/apiUrl';
 
-const API_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+const API_URL = getApiUrl();
 
 const Leaderboard = () => {
     const [allTimeBoard, setAllTimeBoard] = useState([]);

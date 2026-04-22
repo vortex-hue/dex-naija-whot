@@ -1,5 +1,6 @@
 import React from "react";
 import style from "./index.module.css";
+import { getApiUrl } from '../../utils/apiUrl';
 import useIsGameOver from "../../utils/hooks/useIsGameOver";
 import confetti from "canvas-confetti";
 import confettiAnimation from "../../utils/functions/confettiAnimation";
@@ -65,7 +66,7 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
       const storedId = localStorage.getItem("storedId");
       if (storedId) {
         const result = isUserWinner ? 'WIN' : 'LOSS';
-        const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+        const apiUrl = getApiUrl();
         console.log(`📝 Reporting Match Result: ${result} for ${storedId}`);
 
         fetch(`${apiUrl}/api/report-match`, {

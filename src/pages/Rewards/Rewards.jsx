@@ -3,8 +3,9 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
 import { BackButton } from '../../components';
 import styles from './Rewards.module.css';
+import { getApiUrl } from '../../utils/apiUrl';
 
-const API_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+const API_URL = getApiUrl();
 
 const SCORING_TABLE = [
     { action: 'First game of the day', points: '+10', icon: '☀️' },

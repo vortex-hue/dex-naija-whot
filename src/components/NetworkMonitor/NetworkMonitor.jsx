@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { getApiUrl } from '../../utils/apiUrl';
 
 const NetworkMonitor = () => {
     const [status, setStatus] = useState('good'); // 'good' | 'slow' | 'offline'
@@ -18,7 +19,7 @@ const NetworkMonitor = () => {
         // 2. Try to reach the backend
         const start = Date.now();
         try {
-            const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+            const apiUrl = getApiUrl();
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), 8000);
 

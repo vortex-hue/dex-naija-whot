@@ -2,6 +2,7 @@
 import { useAccount, useChainId, useWriteContract, usePublicClient } from 'wagmi';
 import { parseUnits, erc20Abi, formatUnits } from 'viem';
 import { useState } from 'react';
+import { getApiUrl } from '../apiUrl';
 
 const TOKENS = {
     44787: [ // Alfajores Testnet
@@ -99,7 +100,7 @@ export function usePay() {
             console.log("✅ Payment Sent. Tx Hash:", txHash);
 
             // 3. Verify with Backend (FIRE AND FORGET for UI speed if it's a donation)
-            const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+            const apiUrl = getApiUrl();
             const verificationPromise = fetch(`${apiUrl}/api/verify-payment`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

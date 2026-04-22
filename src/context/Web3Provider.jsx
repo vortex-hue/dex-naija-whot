@@ -3,6 +3,7 @@ import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-ad
 import { PhantomWalletAdapter, SolflareWalletAdapter, CoinbaseWalletAdapter } from '@solana/wallet-adapter-wallets';
 import WalletModal from '../components/WalletModal/WalletModal';
 import WalletHeader from '../components/WalletHeader/WalletHeader';
+import { getApiUrl } from '../utils/apiUrl';
 
 const SOLANA_RPC = process.env.REACT_APP_SOLANA_RPC || 'https://api.mainnet-beta.solana.com';
 
@@ -55,7 +56,7 @@ const WalletGate = ({ children }) => {
             console.log('🔗 Solana Wallet Connected:', addr);
 
             // Register user in backend
-            const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+            const apiUrl = getApiUrl();
             fetch(`${apiUrl}/api/user/${addr}`)
                 .then(res => res.json())
                 .then(data => console.log('✅ User registered:', data))

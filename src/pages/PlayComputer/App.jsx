@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import "../../index.css";
 
 import { useAccount } from 'wagmi';
+import { getApiUrl } from '../../utils/apiUrl';
 import React, { useState, useEffect } from 'react';
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
 
   useEffect(() => {
     if (isConnected && address) {
-      fetch(`${process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080'}/api/user/${address}`)
+      fetch(`${getApiUrl()}/api/user/${address}`)
         .then(res => res.json())
         .then(() => setCheckingStatus(false))
         .catch(() => setCheckingStatus(false));

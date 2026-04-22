@@ -5,6 +5,7 @@ import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
 import { useAccount } from "wagmi";
+import { getApiUrl } from "../../utils/apiUrl";
 
 // Animation Variants
 const containerVariants = {
@@ -45,7 +46,7 @@ function Home() {
 
   useEffect(() => {
     if (isConnected && address) {
-      fetch(`${process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080'}/api/user/${address}/points`)
+      fetch(`${getApiUrl()}/api/user/${address}/points`)
         .then(res => res.json())
         .then(data => {
           if (data.success) setPlayerStats(data);

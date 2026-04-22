@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
+import { getApiUrl } from '../utils/apiUrl';
 
 const WalletObserver = () => {
     const { address, isConnected } = useAccount();
@@ -11,7 +12,7 @@ const WalletObserver = () => {
             localStorage.setItem("storedId", address);
 
             // Register user in backend (idempotent)
-            const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
+            const apiUrl = getApiUrl();
             fetch(`${apiUrl}/api/user/${address}`)
                 .then(res => res.json())
                 .then(data => console.log("✅ User registered:", data))
