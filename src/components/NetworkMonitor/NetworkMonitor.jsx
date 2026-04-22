@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 const NetworkMonitor = () => {
     const [status, setStatus] = useState('good'); // 'good' | 'slow' | 'offline'
     const [latency, setLatency] = useState(0);
     const [isHidden, setIsHidden] = useState(false);
-    const [consecutiveFails, setConsecutiveFails] = useState(0);
+    const failCount = useRef(0);
 
     const checkNetwork = useCallback(async () => {
         // 1. First check browser's own network status
         if (!navigator.onLine) {
             setStatus('offline');
             setLatency(0);
-            setConsecutiveFails(prev => prev + 1);
+            failCount.current += 1;
             return;
         }
 
@@ -34,27 +34,20 @@ const NetworkMonitor = () => {
 
             if (res.ok && duration < 5000) {
                 setStatus('good');
-                setConsecutiveFails(0);
-                // Auto-show again if it was previously hidden and fixed
+                failCount.current = 0;
                 if (isHidden) setIsHidden(false);
             } else if (duration >= 5000) {
                 setStatus('slow');
-                setConsecutiveFails(prev => prev + 1);
+                failCount.current += 1;
             } else {
-                // Non-200 but reachable
                 setStatus('good');
-                setConsecutiveFails(0);
+                failCount.current = 0;
             }
         } catch (err) {
-            // Only mark as offline after 2+ consecutive failures
-            // This avoids false alarms from a single dropped request
-            setConsecutiveFails(prev => {
-                const newCount = prev + 1;
-                if (newCount >= 2) {
-                    setStatus('offline');
-                }
-                return newCount;
-            });
+            failCount.current += 1;
+            if (failCount.current >= 2) {
+                setStatus('offline');
+            }
         }
     }, [isHidden]);
 
@@ -68,12 +61,12 @@ const NetworkMonitor = () => {
         // Listen for browser online/offline events
         const handleOnline = () => {
             setStatus('good');
-            setConsecutiveFails(0);
+            failCount.current = 0;
             setIsHidden(false);
         };
         const handleOffline = () => {
             setStatus('offline');
-            setConsecutiveFails(prev => prev + 1);
+            failCount.current += 1;
         };
 
         window.addEventListener('online', handleOnline);
