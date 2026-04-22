@@ -1,24 +1,18 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import styles from './WalletModal.module.css';
-
-const WALLET_ICONS = {
-    'Phantom': 'https://raw.githubusercontent.com/nicholasgasior/phantom-wallet-brand-assets/main/assets/icons/icon-purple.svg',
-    'Solflare': 'https://solflare.com/favicon.svg',
-    'Backpack': 'https://backpack.exchange/icon.png',
-};
 
 const WalletModal = ({ isOpen, onClose }) => {
     const { wallets, select, connecting, connected, publicKey } = useWallet();
     const [showSuccess, setShowSuccess] = useState(false);
 
-    const handleSelectWallet = useCallback(async (walletName) => {
+    const handleSelectWallet = (walletName) => {
         try {
             select(walletName);
         } catch (err) {
             console.error('Wallet connection error:', err);
         }
-    }, [select]);
+    };
 
     useEffect(() => {
         if (connected && publicKey) {
@@ -68,7 +62,7 @@ const WalletModal = ({ isOpen, onClose }) => {
                                             disabled={connecting}
                                         >
                                             <img
-                                                src={WALLET_ICONS[name] || wallet.adapter.icon}
+                                                src={wallet.adapter.icon}
                                                 alt={name}
                                                 className={styles.walletIcon}
                                             />
