@@ -1,51 +1,114 @@
+/* ─── Header Bar ─── */
 .headerBar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 52px;
-    background: rgba(14, 15, 20, 0.92);
-    backdrop-filter: blur(12px);
+    height: 56px;
+    background: rgba(10, 12, 16, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 16px;
     z-index: 9000;
     font-family: 'Inter', -apple-system, sans-serif;
 }
 
+.headerSpacer {
+    height: 56px;
+    flex-shrink: 0;
+}
+
+/* ─── Logo ─── */
 .left {
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .logo {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
 }
 
 .appName {
     font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #fff;
     letter-spacing: -0.3px;
 }
 
+/* ─── Desktop Nav ─── */
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0 auto;
+    padding: 0 12px;
+}
+
+.navLink {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    color: #999;
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.navLink:hover {
+    color: #ddd;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.navLinkActive {
+    color: #fff;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.navIcon {
+    font-size: 0.85rem;
+}
+
+.navLabel {
+    font-size: 0.8rem;
+}
+
+/* ─── Right Section ─── */
 .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.walletWrapper {
     position: relative;
 }
 
 .walletBtn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    padding: 6px 12px;
+    padding: 5px 10px;
     color: #ccc;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-family: 'SF Mono', 'Fira Code', monospace;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -57,9 +120,9 @@
 }
 
 .walletIcon {
-    width: 18px;
-    height: 18px;
-    border-radius: 4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
 }
 
 .address {
@@ -67,29 +130,30 @@
     font-weight: 500;
 }
 
-.copyBtn {
-    background: none;
-    border: none;
-    color: #888;
-    cursor: pointer;
-    font-size: 0.8rem;
-    padding: 2px 4px;
-    border-radius: 4px;
-    transition: all 0.15s;
-}
-
-.copyBtn:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-}
-
 .chevron {
     color: #666;
-    font-size: 0.7rem;
-    margin-left: 2px;
+    font-size: 0.65rem;
+    margin-left: 1px;
 }
 
-/* Dropdown */
+/* ─── Hamburger (mobile) ─── */
+.hamburger {
+    display: none;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ddd;
+    font-size: 1.1rem;
+    padding: 5px 9px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hamburger:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+/* ─── Dropdown ─── */
 .dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -175,4 +239,104 @@
 .disconnectBtn:hover {
     background: rgba(239, 68, 68, 0.2);
     border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ─── Mobile Overlay ─── */
+.mobileOverlay {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 8999;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.mobileNav {
+    background: rgba(14, 16, 22, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mobileNavLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    color: #bbb;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+}
+
+.mobileNavLink:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+.mobileNavLinkActive {
+    color: #fff;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.mobileNavIcon {
+    font-size: 1.2rem;
+    width: 28px;
+    text-align: center;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .nav {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .appName {
+        font-size: 0.85rem;
+    }
+
+    .walletBtn {
+        padding: 4px 8px;
+        font-size: 0.72rem;
+    }
+
+    .walletIcon {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 960px) and (min-width: 769px) {
+    .navLabel {
+        display: none;
+    }
+
+    .navLink {
+        padding: 6px 8px;
+    }
+
+    .navIcon {
+        font-size: 1rem;
+    }
 }
