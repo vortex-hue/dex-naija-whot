@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
+import { useAccount } from "wagmi";
 
 // Animation Variants
 const containerVariants = {
@@ -39,8 +40,19 @@ const floatVariants = {
 };
 
 function Home() {
-  // const { isConnected } = useAccount();
-  // const { isMiniPayUser } = useMiniPay();
+  const { address, isConnected } = useAccount();
+  const [playerStats, setPlayerStats] = useState(null);
+
+  useEffect(() => {
+    if (isConnected && address) {
+      fetch(`${process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080'}/api/user/${address}/points`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) setPlayerStats(data);
+        })
+        .catch(err => console.error('Stats fetch error:', err));
+    }
+  }, [isConnected, address]);
 
   return (
     <motion.section
@@ -95,6 +107,34 @@ function Home() {
               </motion.div>
             </div>
 
+            {/* Player Stats Bar */}
+            {isConnected && playerStats && (
+              <motion.div
+                className="stats-bar"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <div className="stat-item">
+                  <span className="stat-icon">🔥</span>
+                  <span className="stat-value">{playerStats.streak_count || 0}</span>
+                  <span className="stat-label">Day Streak</span>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                  <span className="stat-icon">⭐</span>
+                  <span className="stat-value">{playerStats.points || 0}</span>
+                  <span className="stat-label">Total Points</span>
+                </div>
+                <div className="stat-divider"></div>
+                <div className="stat-item">
+                  <span className="stat-icon">💰</span>
+                  <span className="stat-value">{playerStats.weekly_points || 0}</span>
+                  <span className="stat-label">This Week</span>
+                </div>
+              </motion.div>
+            )}
+
             {/* CTA Buttons */}
             <div className="cta-group">
               <Link to="/play-computer">
@@ -145,14 +185,14 @@ function Home() {
                 </motion.button>
               </Link>
 
-              <Link to="/donation">
+              <Link to="/rewards">
                 <motion.button
                   className="cta-btn secondary"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   style={{ border: '1px solid #FFD700', color: '#FFD700', marginLeft: '10px' }}
                 >
-                  ❤️ Donate
+                  🏆 Rewards
                 </motion.button>
               </Link>
             </div>

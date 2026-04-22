@@ -96,3 +96,40 @@
     padding: 50px;
     color: #666;
 }
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    max-width: 600px;
+    margin: 0 auto 20px;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    color: #888;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+}
+
+.tabActive {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+    border-color: rgba(255, 215, 0, 0.4);
+    color: #FFD700;
+}
+
+.streak {
+    color: #FF6B35;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
