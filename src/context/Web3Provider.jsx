@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
 import { PhantomWalletAdapter, SolflareWalletAdapter, CoinbaseWalletAdapter } from '@solana/wallet-adapter-wallets';
 import WalletModal from '../components/WalletModal/WalletModal';
+import WalletHeader from '../components/WalletHeader/WalletHeader';
 
 const SOLANA_RPC = process.env.REACT_APP_SOLANA_RPC || 'https://api.mainnet-beta.solana.com';
 
@@ -81,6 +82,7 @@ const WalletGate = ({ children }) => {
 
     return (
         <>
+            <WalletHeader />
             {children}
             <WalletModal isOpen={showModal} onClose={() => setShowModal(false)} />
         </>
