@@ -27,6 +27,10 @@ module.exports = {
         ...webpackConfig.resolve.alias,
         'process/browser': require.resolve('process/browser.js'),
         '@react-native-async-storage/async-storage': false,
+        // Redirect wagmi imports to Solana wallet adapter shim
+        'wagmi': require('path').resolve(__dirname, 'src/utils/wagmiShim.js'),
+        'wagmi/chains': require('path').resolve(__dirname, 'src/utils/wagmiShim.js'),
+        'minipay-wagmi-connector': require('path').resolve(__dirname, 'src/utils/wagmiShim.js'),
       };
 
       // Add plugins

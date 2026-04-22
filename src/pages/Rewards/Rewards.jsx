@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { motion } from 'framer-motion';
 import { BackButton } from '../../components';
 import styles from './Rewards.module.css';
@@ -16,7 +16,9 @@ const SCORING_TABLE = [
 ];
 
 const Rewards = () => {
-    const { address, isConnected } = useAccount();
+    const { publicKey, connected } = useWallet();
+    const address = publicKey?.toBase58();
+    const isConnected = connected;
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [solanaInput, setSolanaInput] = useState('');

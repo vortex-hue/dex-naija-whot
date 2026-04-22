@@ -1,0 +1,322 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal {
+    display: flex;
+    background: #1a1d23;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    max-width: 720px;
+    width: 90%;
+    min-height: 420px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+/* Left Panel — Wallet Selector */
+.leftPanel {
+    flex: 1;
+    padding: 36px 32px;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0 0 28px;
+    line-height: 1.4;
+}
+
+.walletList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.walletBtn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+}
+
+.walletBtn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateX(4px);
+}
+
+.walletBtnDisabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.walletIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.walletName {
+    flex: 1;
+}
+
+.popularBadge {
+    background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+}
+
+.detectedDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4CAF50;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.newToSolana {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.infoIcon {
+    font-size: 0.9rem;
+}
+
+.getWalletLink {
+    color: #8B5CF6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.getWalletLink:hover {
+    text-decoration: underline;
+}
+
+/* Right Panel — Security Info */
+.rightPanel {
+    width: 280px;
+    padding: 28px 24px;
+    background: rgba(255, 255, 255, 0.02);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.closeBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sectionLabel {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #FF8C00;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.guaranteeItem {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.guaranteeItem strong {
+    display: block;
+    color: #ddd;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.guaranteeItem p {
+    color: #777;
+    font-size: 0.75rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.checkIcon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.cancelIcon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.networkBanner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: auto;
+}
+
+.networkDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4CAF50;
+    box-shadow: 0 0 6px #4CAF50;
+    flex-shrink: 0;
+}
+
+.networkLabel {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.networkStatus {
+    color: #ddd;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Success State */
+.successView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    text-align: center;
+    width: 100%;
+    animation: fadeIn 0.4s ease;
+}
+
+.successIcon {
+    font-size: 4rem;
+    margin-bottom: 16px;
+}
+
+.successTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px;
+}
+
+.successSub {
+    color: #888;
+    font-size: 0.95rem;
+    margin: 0 0 16px;
+}
+
+.successAddr {
+    color: #4CAF50;
+    font-family: monospace;
+    font-size: 0.9rem;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .modal {
+        flex-direction: column;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .leftPanel {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 28px 24px;
+    }
+
+    .rightPanel {
+        width: auto;
+        padding: 24px;
+    }
+}
