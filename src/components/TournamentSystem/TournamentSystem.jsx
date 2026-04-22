@@ -5,11 +5,9 @@ import socket from '../../socket/socket';
 import { useNavigate } from 'react-router-dom';
 import './TournamentSystem.css';
 import { generateRandomCode } from '../../utils/functions/generateRandomCode';
-import { useAccount } from 'wagmi';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
-    useAccount();
 
     // State
     const [tournaments, setTournaments] = useState([]);
