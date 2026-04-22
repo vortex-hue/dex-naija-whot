@@ -10,6 +10,9 @@ WhotChain is a premium, high-fidelity Naija Whot card game powered by **Solana**
 
 Play, earn points, climb the leaderboard, and win weekly SOL rewards — all with your Solana wallet.
 
+🎮 **Live App**: [https://whot.xendex.com.ng](https://whot.xendex.com.ng)
+⚙️ **Backend API**: [https://api.whot.xendex.com.ng](https://api.whot.xendex.com.ng)
+
 ## Key Features 🚀
 
 - **Solana Wallet Integration**: Connect with Phantom, Solflare, Backpack, or any Solana wallet adapter-compatible wallet. Wallet stays connected across page refreshes.
@@ -87,7 +90,7 @@ Events are fired server-side to `https://ingest.torque.so/events` with the playe
 
 | Variable | Description | Default |
 |---|---|---|
-| `REACT_APP_SOCKET_URL` | Backend WebSocket URL | `http://localhost:8080` |
+| `REACT_APP_SOCKET_URL` | Backend WebSocket URL | `https://api.whot.xendex.com.ng` |
 
 ## Project Structure 📁
 
