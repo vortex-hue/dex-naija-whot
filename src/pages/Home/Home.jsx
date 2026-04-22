@@ -172,7 +172,7 @@ function Home() {
               </Link>
             </div>
 
-            {/* MiniPay & Leaderboard & Donation Section */}
+            {/* Links Section */}
             <div className="cta-group" style={{ marginTop: '15px' }}>
               <Link to="/leaderboard">
                 <motion.button

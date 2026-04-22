@@ -12,14 +12,23 @@ const SOLANA_RPC = process.env.REACT_APP_SOLANA_RPC || 'https://api.mainnet-beta
 const WalletGate = ({ children }) => {
     const { connected, publicKey } = useWallet();
     const [showModal, setShowModal] = useState(false);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        // Show modal automatically if not connected (after a short delay to allow autoConnect)
+        // Wait for autoConnect attempt before deciding to show modal
         const timer = setTimeout(() => {
+            setIsReady(true);
             if (!connected) setShowModal(true);
         }, 1500);
         return () => clearTimeout(timer);
     }, [connected]);
+
+    // Re-show modal if user disconnects
+    useEffect(() => {
+        if (isReady && !connected) {
+            setShowModal(true);
+        }
+    }, [connected, isReady]);
 
     // Sync wallet to localStorage for game logic
     useEffect(() => {
@@ -41,16 +50,39 @@ const WalletGate = ({ children }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ address: addr, solanaAddress: addr })
             }).catch(() => {});
+
+            setShowModal(false);
         }
     }, [connected, publicKey]);
+
+    // Block all content until wallet is connected
+    if (!connected) {
+        return (
+            <>
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: '#0a0b0e',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    zIndex: 9990,
+                }}>
+                    {!showModal && (
+                        <div style={{ textAlign: 'center', color: '#888' }}>
+                            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🃏</div>
+                            <h2 style={{ color: '#fff', marginBottom: '8px' }}>Naija Whot</h2>
+                            <p>Connecting wallet...</p>
+                        </div>
+                    )}
+                </div>
+                <WalletModal isOpen={showModal} onClose={() => setShowModal(false)} />
+                <ConnectWalletButton onClick={() => setShowModal(true)} />
+            </>
+        );
+    }
 
     return (
         <>
             {children}
             <WalletModal isOpen={showModal} onClose={() => setShowModal(false)} />
-            {!connected && (
-                <ConnectWalletButton onClick={() => setShowModal(true)} />
-            )}
         </>
     );
 };

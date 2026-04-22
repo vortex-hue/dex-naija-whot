@@ -6,14 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import './TournamentSystem.css';
 import { generateRandomCode } from '../../utils/functions/generateRandomCode';
 import { useAccount } from 'wagmi';
-import { usePay } from '../../utils/hooks/usePay';
-import { useMiniPay } from '../../context/MiniPayContext';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
     useAccount();
-    const { isMiniPayUser } = useMiniPay();
-    usePay();
 
     // State
     const [tournaments, setTournaments] = useState([]);
@@ -310,7 +306,7 @@ const TournamentSystem = () => {
                                 Bracket (4 Players)
                             </motion.button>
                             <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => createTournament(8)}>
-                                Bracket (8 Players) {isMiniPayUser && "($0.10)"}
+                                Bracket (8 Players)
                             </motion.button>
                         </div>
                     </motion.div>
