@@ -22,9 +22,9 @@ window.addEventListener('unhandledrejection', (event) => {
 root.render(
   <React.StrictMode>
     <ErrorBoundary>
-      <Web3Provider>
-        <NetworkMonitor />
-        <Router>
+      <Router>
+        <Web3Provider>
+          <NetworkMonitor />
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/play-computer" exact element={<PlayComputer />} />
@@ -37,8 +37,8 @@ root.render(
             <Route path="/rewards" exact element={<Rewards />} />
             <Route path="/donation" exact element={<Donation />} />
           </Routes>
-        </Router>
-      </Web3Provider>
+        </Web3Provider>
+      </Router>
     </ErrorBoundary>
   </React.StrictMode>
 );
