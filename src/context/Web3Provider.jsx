@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
 import { PhantomWalletAdapter, SolflareWalletAdapter, CoinbaseWalletAdapter } from '@solana/wallet-adapter-wallets';
 import WalletModal from '../components/WalletModal/WalletModal';
@@ -11,25 +11,41 @@ const SOLANA_RPC = process.env.REACT_APP_SOLANA_RPC || 'https://api.mainnet-beta
  * Shows the connect modal if no wallet is connected.
  */
 const WalletGate = ({ children }) => {
-    const { connected, publicKey } = useWallet();
+    const { connected, publicKey, wallet } = useWallet();
     const [showModal, setShowModal] = useState(false);
-    const [isReady, setIsReady] = useState(false);
+    const isReady = useRef(false);
+    const hasAutoConnected = useRef(false);
 
+    // Wait for autoConnect attempt — run ONCE on mount
     useEffect(() => {
-        // Wait for autoConnect attempt before deciding to show modal
         const timer = setTimeout(() => {
-            setIsReady(true);
-            if (!connected) setShowModal(true);
-        }, 1500);
+            isReady.current = true;
+            if (!hasAutoConnected.current) {
+                setShowModal(true);
+            }
+        }, 2500); // Give autoConnect 2.5s to complete
         return () => clearTimeout(timer);
-    }, [connected]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
-    // Re-show modal if user disconnects
+    // Track when wallet connects (including autoConnect)
     useEffect(() => {
-        if (isReady && !connected) {
+        if (connected && publicKey) {
+            hasAutoConnected.current = true;
+            setShowModal(false);
+        }
+    }, [connected, publicKey]);
+
+    // Re-show modal if user disconnects AFTER initial load
+    useEffect(() => {
+        if (isReady.current && !connected && hasAutoConnected.current) {
+            // User was connected but disconnected
+            setShowModal(true);
+        } else if (isReady.current && !connected && !wallet) {
+            // No wallet ever connected and ready period elapsed
             setShowModal(true);
         }
-    }, [connected, isReady]);
+    }, [connected, wallet]);
 
     // Sync wallet to localStorage for game logic
     useEffect(() => {
@@ -51,8 +67,6 @@ const WalletGate = ({ children }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ address: addr, solanaAddress: addr })
             }).catch(() => {});
-
-            setShowModal(false);
         }
     }, [connected, publicKey]);
 
