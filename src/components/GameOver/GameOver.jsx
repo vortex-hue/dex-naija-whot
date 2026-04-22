@@ -5,15 +5,9 @@ import confetti from "canvas-confetti";
 import confettiAnimation from "../../utils/functions/confettiAnimation";
 import { useEffect, useState } from "react";
 
-
-import { useAccount } from 'wagmi';
-import { usePay } from '../../utils/hooks/usePay';
-
 function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver, isComputer }) {
   const isGameOverHook = useIsGameOver();
   const [animationHasRun, setAnimationHasRun] = useState(false);
-  const { pay, isPaying } = usePay();
-  const { isConnected } = useAccount();
 
   const localGameOver = isGameOverHook();
 
@@ -32,13 +26,15 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
   // Determine if tournament is won overall
   const isTournamentWin = isTournament && isUserWinner && isFinalMatch;
 
-  const title = isUserWinner ? (isTournamentWin ? "TOURNAMENT CHAMPION! 🏆🇳🇬" : "YOU WIN 🏆🇳🇬") : "YOU LOST THIS TOURNAMENT 😔";
+  const title = isUserWinner
+    ? (isTournamentWin ? "TOURNAMENT CHAMPION! 🏆🇳🇬" : "YOU WIN 🏆🇳🇬")
+    : (isTournament ? "You Lost 😔" : "You Lost 😔");
 
   const subtitle = isUserWinner
     ? (isTournamentWin
       ? `Congrats for winning tournament 🏆🇳🇬 "${tournamentData?.name || ''}", you were indeed exceptional!`
       : "Congrats! You won this round.")
-    : "Sorry, just try again.";
+    : "Better luck next time!";
 
   useEffect(() => {
     let cleanup;
@@ -63,12 +59,11 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
     };
   }, [isUserWinner, animationHasRun, isTournamentWin]);
 
-  // Report Result to Backend (for XP and Payment Logic)
+  // Report Result to Backend (for points & Torque events)
   useEffect(() => {
-    if (!isTournament && gameOverState.answer) {
+    if (gameOverState.answer) {
       const storedId = localStorage.getItem("storedId");
-      // Only report if it looks like a wallet address (MiniPay user)
-      if (storedId && storedId.startsWith("0x")) {
+      if (storedId) {
         const result = isUserWinner ? 'WIN' : 'LOSS';
         const apiUrl = process.env.REACT_APP_SOCKET_URL || 'http://localhost:8080';
         console.log(`📝 Reporting Match Result: ${result} for ${storedId}`);
@@ -80,7 +75,7 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
         }).catch(err => console.error("❌ Failed to report match:", err));
       }
     }
-  }, [gameOverState.answer, isUserWinner, isTournament]);
+  }, [gameOverState.answer, isUserWinner]);
 
   return (
     <div
@@ -97,9 +92,7 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
                 : "Eliminated. Returning to lobby..."}
             </p>
             <button
-              onClick={() => {
-                window.location.href = "/";
-              }}
+              onClick={() => { window.location.href = "/"; }}
               className={`${style.btn} ${style.lobby_btn}`}
             >
               BACK TO LOBBY
@@ -107,37 +100,14 @@ function GameOver({ isTournament, tournamentData, currentMatchId, remoteGameOver
           </div>
         ) : (
           <div className={style.friendly_controls}>
-
-            {isComputer && !isUserWinner && isConnected ? (
-              <button
-                onClick={async () => {
-                  const success = await pay(0.1, 'computer_retry');
-                  if (success) {
-                    window.location.reload();
-                  }
-                }}
-                disabled={isPaying}
-                className={style.btn}
-                style={{ background: '#4CAF50', border: 'none', marginLeft: '10px' }}
-              >
-                {isPaying ? "PROCESSING..." : "RETRY WITH $0.10"}
-              </button>
-            ) : (
-              (!isComputer || isUserWinner) && (
-                <button
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                  className={style.btn}
-                >
-                  PLAY AGAIN
-                </button>
-              )
-            )}
             <button
-              onClick={() => {
-                window.location.href = "/";
-              }}
+              onClick={() => { window.location.reload(); }}
+              className={style.btn}
+            >
+              PLAY AGAIN
+            </button>
+            <button
+              onClick={() => { window.location.href = "/"; }}
               className={`${style.btn} ${style.lobby_btn}`}
             >
               BACK TO LOBBY
