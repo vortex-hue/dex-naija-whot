@@ -4,11 +4,7 @@ import { motion } from "framer-motion";
 import { Footer, BackButton } from "../../components";
 import "../../styles/copylink.css";
 import { useNavigate } from "react-router-dom";
-import { useAccount } from "wagmi";
-import { usePay } from "../../utils/hooks/usePay";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
-
-import { useMiniPay } from "../../context/MiniPayContext";
 
 function CopyLink() {
   const navigate = useNavigate();

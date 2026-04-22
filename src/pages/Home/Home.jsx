@@ -5,9 +5,6 @@ import "../../styles/home.css";
 import mockup from "./assets/mockup.png";
 import { Footer } from "../../components";
 
-import { useAccount } from "wagmi";
-import { useMiniPay } from "../../context/MiniPayContext";
-
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },

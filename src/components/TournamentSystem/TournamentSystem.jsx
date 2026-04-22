@@ -11,9 +11,9 @@ import { useMiniPay } from '../../context/MiniPayContext';
 
 const TournamentSystem = () => {
     const navigate = useNavigate();
-    const { isConnected } = useAccount();
+    useAccount();
     const { isMiniPayUser } = useMiniPay();
-    const { pay } = usePay();
+    usePay();
 
     // State
     const [tournaments, setTournaments] = useState([]);

@@ -17,24 +17,16 @@ import { Flipper } from "react-flip-toolkit";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import "../../index.css";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import socket from "../../socket/socket";
 import { generateRandomCode } from "../../utils/functions/generateRandomCode";
 import useIsGameOver from "../../utils/hooks/useIsGameOver";
-import { useAccount } from 'wagmi';
-import { useMiniPay } from '../../context/MiniPayContext';
-import { usePay } from '../../utils/hooks/usePay';
+
 
 function App() {
   const { room_id } = useParams();
-  const location = useLocation();
-  const { isConnected } = useAccount();
-  const { isMiniPayUser } = useMiniPay();
-  const { pay, isPaying } = usePay();
 
-  const [hasPaid, setHasPaid] = useState(() => {
-    return location.state?.paid || false;
-  });
+
 
   const isGameOver = useIsGameOver();
   const [errorText, setErrorText] = useState("");
